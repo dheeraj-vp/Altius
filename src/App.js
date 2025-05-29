@@ -1,6 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUp, ArrowDown, TrendingUp, Building2, FileText, PieChart, DollarSign, Users, Calendar, MessageCircle, ChevronRight, Search, Menu, X } from 'lucide-react';
 
+
+// Reusable Table Component
+const FinancialTable = ({ title, data, years, className = "" }) => (
+  <div className={`bg-white rounded-lg p-6 shadow-sm ${className}`}>
+    <h4 className="text-lg font-semibold mb-4 text-gray-800">{title}</h4>
+    <div className="overflow-x-auto">
+      <table className="min-w-full">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 sticky left-0 bg-gray-100">Particulars</th>
+            {years.map(year => (
+              <th key={year} className="px-4 py-3 text-right text-sm font-medium text-gray-700 min-w-[100px]">
+                {year}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {data.map((row, index) => (
+            <tr key={index} className={row.isHighlight ? 'bg-blue-50' : ''}>
+              <td className="px-4 py-3 text-sm font-medium text-gray-800 sticky left-0 bg-white">
+                {row.label}
+              </td>
+              {row.values.map((value, idx) => (
+                <td key={idx} className={`px-4 py-3 text-sm text-right ${row.isHighlight ? 'font-semibold text-blue-800' : 'text-gray-700'}`}>
+                  {value !== null && value !== undefined ? 
+                    (typeof value === 'number' ? 
+                      (value < 0 ? `(${Math.abs(value).toFixed(2)})` : value.toFixed(2)) : 
+                      value
+                    ) : '-'
+                  }
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+// Reusable Section Header Component
+const SectionHeader = ({ title, subtitle, gradient }) => (
+  <div className={`bg-gradient-to-r ${gradient} rounded-xl p-6 mb-6`}>
+    <h3 className="text-2xl font-bold text-gray-800 mb-2">{title}</h3>
+    {subtitle && <p className="text-gray-600">{subtitle}</p>}
+  </div>
+);
+
+// Reusable Metric Card Component
+const MetricCard = ({ title, value, change, isPercentage = false }) => (
+  <div className="bg-white rounded-lg p-4 shadow-sm border-l-4 border-blue-500">
+    <h5 className="text-sm font-medium text-gray-600 mb-1">{title}</h5>
+    <p className="text-xl font-bold text-gray-800">{value}</p>
+    {change && (
+      <p className={`text-sm ${change > 0 ? 'text-green-600' : 'text-red-600'}`}>
+        {change > 0 ? '↗' : '↘'} {Math.abs(change)}{isPercentage ? '%' : ''}
+      </p>
+    )}
+  </div>
+);
 // Mock data for companies
 const companiesData = {
   "mohan-meakin": {
@@ -67,6 +128,8 @@ const companiesData = {
     ]
   }
 };
+
+
 
 const App = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
@@ -889,7 +952,227 @@ case 'balance-sheet':
     </div>
   );
   
+case 'profit-loss':
+  const standaloneYears = ['FY24', 'FY23', 'FY22', 'FY21', 'FY20', 'FY19', 'FY18', 'FY17', 'FY16', 'FY15'];
+  const consolidatedYears = ['FY20', 'FY19', 'FY18', 'FY17', 'FY16'];
+
+  const standaloneData = [
+    {
+      label: 'Net Revenue',
+      values: [1929.92, 1771.21, 1370.42, 1099.01, 1020.94, 947.94, 655.77, 580.97, 442.94, 409.51],
+      isHighlight: true
+    },
+    {
+      label: 'Total Operating Cost',
+      values: [1818.67, 1681.95, 1302.80, 1042.60, 978.24, 897.26, 637.24, 566.70, 432.70, 404.01]
+    },
+    {
+      label: 'EBITDA',
+      values: [111.25, 89.26, 67.62, 56.41, 42.70, 50.68, 18.53, 14.28, 10.23, 5.50],
+      isHighlight: true
+    },
+    {
+      label: 'Other Income',
+      values: [11.85, 7.37, 8.96, 2.86, 6.84, 6.19, 4.59, 4.50, 8.98, 6.13]
+    },
+    {
+      label: 'Depreciation',
+      values: [8.38, 6.88, 6.05, 5.22, 4.76, 3.85, 2.55, 2.86, 3.01, 3.95]
+    },
+    {
+      label: 'PBIT',
+      values: [114.73, 89.74, 70.53, 54.05, 44.78, 53.02, 20.58, 15.91, 16.20, 7.68]
+    },
+    {
+      label: 'Finance Costs',
+      values: [0.79, 0.96, 1.56, 2.91, 2.67, 2.97, 6.65, 9.15, 10.99, 11.22]
+    },
+    {
+      label: 'Profit Before Tax & Exception',
+      values: [113.94, 88.79, 68.98, 51.13, 42.10, 50.05, 13.92, 6.77, 5.21, -3.53]
+    },
+    {
+      label: 'Exceptional Items',
+      values: [0.00, 3.01, 0.00, 3.01, 0.00, 1.28, 8.15, 0.00, 0.00, 9.39]
+    },
+    {
+      label: 'Profit (Continuing Ops)',
+      values: [113.94, 91.80, 68.98, 54.15, 42.10, 51.32, 22.08, 6.77, 5.21, 5.86]
+    },
+    {
+      label: 'Income Tax',
+      values: [29.24, 23.40, 17.52, 13.84, 15.69, 16.38, 6.54, 1.98, 1.47, 2.10]
+    },
+    {
+      label: 'PAT from Continuing Operations',
+      values: [84.70, 68.40, 51.45, 40.31, 26.41, 34.94, 15.54, 4.79, 3.74, 3.76],
+      isHighlight: true
+    },
+    {
+      label: 'PAT',
+      values: [84.70, 68.40, 51.45, 40.31, 26.41, 34.94, 15.54, 4.79, 3.74, 3.76],
+      isHighlight: true
+    }
+  ];
+
+  const consolidatedData = [
+    {
+      label: 'Net Revenue',
+      values: [1020.94, 947.94, 655.77, 580.97, 442.94],
+      isHighlight: true
+    },
+    {
+      label: 'Total Operating Cost',
+      values: [978.24, 897.26, 637.24, 566.70, 432.70]
+    },
+    {
+      label: 'EBITDA',
+      values: [42.70, 50.68, 18.53, 14.28, 10.23],
+      isHighlight: true
+    },
+    {
+      label: 'Other Income',
+      values: [6.84, 6.19, 4.59, 4.50, 8.98]
+    },
+    {
+      label: 'Depreciation',
+      values: [4.76, 3.85, 2.55, 2.86, 3.01]
+    },
+    {
+      label: 'PBIT',
+      values: [44.77, 53.02, 20.58, 15.91, 16.20]
+    },
+    {
+      label: 'Finance Costs',
+      values: [2.67, 2.97, 6.65, 9.15, 10.99]
+    },
+    {
+      label: 'Profit Before Tax & Exception',
+      values: [42.10, 50.05, 13.92, 6.77, 5.21]
+    },
+    {
+      label: 'Exceptional Items',
+      values: [0.00, -0.32, 8.15, 0.00, 0.00]
+    },
+    {
+      label: 'Profit (Continuing Ops)',
+      values: [42.10, 49.72, 22.08, 6.77, 5.21]
+    },
+    {
+      label: 'Income Tax',
+      values: [15.69, 16.38, 6.54, 1.98, 1.47]
+    },
+    {
+      label: 'PAT from Continuing Operations',
+      values: [26.41, 33.34, 15.54, 4.79, 3.74]
+    },
+    {
+      label: 'Minority Interest, JV, Associates',
+      values: [0.00, -0.19, -0.21, -0.14, -0.18]
+    },
+    {
+      label: 'PAT',
+      values: [26.40, 33.15, 15.33, 4.64, 3.55],
+      isHighlight: true
+    }
+  ];
+
+  // Calculate key metrics
+  const revenueGrowthFY24 = ((1929.92 - 1771.21) / 1771.21 * 100);
+  const patGrowthFY24 = ((84.70 - 68.40) / 68.40 * 100);
+  const ebitdaMarginFY24 = (111.25 / 1929.92 * 100);
+  const patMarginFY24 = (84.70 / 1929.92 * 100);
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader 
+        title="Profit & Loss Statement" 
+        subtitle="Comprehensive financial performance analysis (₹ in Crores)"
+        gradient="from-indigo-50 to-purple-50"
+      />
       
+      {/* Key Performance Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <MetricCard 
+          title="Revenue Growth (FY24)"
+          value={`${revenueGrowthFY24.toFixed(1)}%`}
+          change={revenueGrowthFY24}
+          isPercentage={true}
+        />
+        <MetricCard 
+          title="PAT Growth (FY24)"
+          value={`${patGrowthFY24.toFixed(1)}%`}
+          change={patGrowthFY24}
+          isPercentage={true}
+        />
+        <MetricCard 
+          title="EBITDA Margin (FY24)"
+          value={`${ebitdaMarginFY24.toFixed(1)}%`}
+        />
+        <MetricCard 
+          title="PAT Margin (FY24)"
+          value={`${patMarginFY24.toFixed(1)}%`}
+        />
+      </div>
+
+      {/* Standalone Financial Statement */}
+      <FinancialTable 
+        title="Standalone Financial Statement (10 Years)"
+        data={standaloneData}
+        years={standaloneYears}
+        className="mb-6"
+      />
+
+      {/* Consolidated Financial Statement */}
+      <FinancialTable 
+        title="Consolidated Financial Statement (5 Years)"
+        data={consolidatedData}
+        years={consolidatedYears}
+        className="mb-6"
+      />
+
+      {/* Key Observations */}
+      <div className="bg-white rounded-lg p-6 shadow-sm">
+        <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Observations</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <h5 className="font-medium text-gray-800 mb-2">Growth Trends</h5>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                Revenue CAGR (FY15-FY24): <strong>18.7%</strong>
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                PAT CAGR (FY15-FY24): <strong>39.4%</strong>
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                EBITDA has grown from ₹5.50 Cr to ₹111.25 Cr
+              </li>
+            </ul>
+          </div>
+          <div className="space-y-3">
+            <h5 className="font-medium text-gray-800 mb-2">Profitability Metrics</h5>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                EBITDA Margin improved from 1.3% to 5.8%
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                PAT Margin improved from 0.9% to 4.4%
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                Finance costs reduced significantly over the years
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );    
       default:
         return (
           <div className="text-center py-12">
