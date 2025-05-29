@@ -1113,268 +1113,148 @@ case 'insights':
       </div>
     </div>
   );
-
 case 'balance-sheet':
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl p-6">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6">Balance Sheet</h3>
-        
-        {/* Tabs */}
-        <div className="flex border-b border-gray-200 mb-6">
-          <button
-            className={`py-2 px-4 font-medium text-sm focus:outline-none ${activeBalanceSheetTab === 'standalone' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-            onClick={() => setActiveBalanceSheetTab('standalone')}
-          >
-            Standalone
-          </button>
-          <button
-            className={`py-2 px-4 font-medium text-sm focus:outline-none ${activeBalanceSheetTab === 'consolidated' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-            onClick={() => setActiveBalanceSheetTab('consolidated')}
-          >
-            Consolidated
-          </button>
-        </div>
+      <SectionHeader 
+        title="Balance Sheet" 
+        subtitle="Detailed breakdown of assets and liabilities"
+        gradient="from-blue-50 to-indigo-50"
+      />
 
-        {/* Tab Content */}
+      {/* Tabs */}
+      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+        <button
+          className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${activeBalanceSheetTab === 'standalone' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'}`}
+          onClick={() => setActiveBalanceSheetTab('standalone')}
+        >
+          Standalone
+        </button>
+        <button
+          className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${activeBalanceSheetTab === 'consolidated' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'}`}
+          onClick={() => setActiveBalanceSheetTab('consolidated')}
+        >
+          Consolidated
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {activeBalanceSheetTab === 'standalone' ? (
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white rounded-lg overflow-hidden">
-              <thead className="bg-gray-100">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Particulars</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY24</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY23</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY22</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY21</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY20</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY19</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY18</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY17</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY16</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY15</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-10">Particulars</th>
+                  {[...Array(11)].map((_, i) => (
+                    <th key={i} className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      FY{24 - i}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Equity</td>
-                  <td className="px-4 py-3 text-sm">366.32</td>
-                  <td className="px-4 py-3 text-sm">280.22</td>
-                  <td className="px-4 py-3 text-sm">211.10</td>
-                  <td className="px-4 py-3 text-sm">158.39</td>
-                  <td className="px-4 py-3 text-sm">117.82</td>
-                  <td className="px-4 py-3 text-sm">92.16</td>
-                  <td className="px-4 py-3 text-sm">56.92</td>
-                  <td className="px-4 py-3 text-sm">41.02</td>
-                  <td className="px-4 py-3 text-sm">26.47</td>
-                  <td className="px-4 py-3 text-sm">22.73</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Liabilities</td>
-                  <td className="px-4 py-3 text-sm">168.41</td>
-                  <td className="px-4 py-3 text-sm">154.06</td>
-                  <td className="px-4 py-3 text-sm">137.58</td>
-                  <td className="px-4 py-3 text-sm">131.60</td>
-                  <td className="px-4 py-3 text-sm">137.12</td>
-                  <td className="px-4 py-3 text-sm">137.95</td>
-                  <td className="px-4 py-3 text-sm">147.67</td>
-                  <td className="px-4 py-3 text-sm">157.19</td>
-                  <td className="px-4 py-3 text-sm">169.98</td>
-                  <td className="px-4 py-3 text-sm">170.08</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">NCL</td>
-                  <td className="px-4 py-3 text-sm">15.77</td>
-                  <td className="px-4 py-3 text-sm">16.44</td>
-                  <td className="px-4 py-3 text-sm">16.03</td>
-                  <td className="px-4 py-3 text-sm">16.05</td>
-                  <td className="px-4 py-3 text-sm">20.03</td>
-                  <td className="px-4 py-3 text-sm">21.73</td>
-                  <td className="px-4 py-3 text-sm">19.31</td>
-                  <td className="px-4 py-3 text-sm">17.26</td>
-                  <td className="px-4 py-3 text-sm">21.25</td>
-                  <td className="px-4 py-3 text-sm">17.83</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">CL</td>
-                  <td className="px-4 py-3 text-sm">152.64</td>
-                  <td className="px-4 py-3 text-sm">137.62</td>
-                  <td className="px-4 py-3 text-sm">121.55</td>
-                  <td className="px-4 py-3 text-sm">115.55</td>
-                  <td className="px-4 py-3 text-sm">117.09</td>
-                  <td className="px-4 py-3 text-sm">116.22</td>
-                  <td className="px-4 py-3 text-sm">128.36</td>
-                  <td className="px-4 py-3 text-sm">139.93</td>
-                  <td className="px-4 py-3 text-sm">148.73</td>
-                  <td className="px-4 py-3 text-sm">152.25</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Total Equity and Liability</td>
-                  <td className="px-4 py-3 text-sm">534.74</td>
-                  <td className="px-4 py-3 text-sm">434.27</td>
-                  <td className="px-4 py-3 text-sm">348.68</td>
-                  <td className="px-4 py-3 text-sm">289.99</td>
-                  <td className="px-4 py-3 text-sm">254.94</td>
-                  <td className="px-4 py-3 text-sm">230.11</td>
-                  <td className="px-4 py-3 text-sm">204.59</td>
-                  <td className="px-4 py-3 text-sm">198.22</td>
-                  <td className="px-4 py-3 text-sm">196.45</td>
-                  <td className="px-4 py-3 text-sm">192.82</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Net Fixed Assets</td>
-                  <td className="px-4 py-3 text-sm">84.71</td>
-                  <td className="px-4 py-3 text-sm">71.78</td>
-                  <td className="px-4 py-3 text-sm">61.37</td>
-                  <td className="px-4 py-3 text-sm">58.57</td>
-                  <td className="px-4 py-3 text-sm">52.54</td>
-                  <td className="px-4 py-3 text-sm">46.51</td>
-                  <td className="px-4 py-3 text-sm">30.14</td>
-                  <td className="px-4 py-3 text-sm">29.13</td>
-                  <td className="px-4 py-3 text-sm">31.80</td>
-                  <td className="px-4 py-3 text-sm">29.67</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Capital WIP</td>
-                  <td className="px-4 py-3 text-sm">12.12</td>
-                  <td className="px-4 py-3 text-sm">10.16</td>
-                  <td className="px-4 py-3 text-sm">8.03</td>
-                  <td className="px-4 py-3 text-sm">7.30</td>
-                  <td className="px-4 py-3 text-sm">8.97</td>
-                  <td className="px-4 py-3 text-sm">8.28</td>
-                  <td className="px-4 py-3 text-sm">6.48</td>
-                  <td className="px-4 py-3 text-sm">7.17</td>
-                  <td className="px-4 py-3 text-sm">5.93</td>
-                  <td className="px-4 py-3 text-sm">6.22</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Other NCA</td>
-                  <td className="px-4 py-3 text-sm">104.65</td>
-                  <td className="px-4 py-3 text-sm">28.02</td>
-                  <td className="px-4 py-3 text-sm">25.29</td>
-                  <td className="px-4 py-3 text-sm">20.35</td>
-                  <td className="px-4 py-3 text-sm">21.14</td>
-                  <td className="px-4 py-3 text-sm">27.37</td>
-                  <td className="px-4 py-3 text-sm">32.54</td>
-                  <td className="px-4 py-3 text-sm">37.04</td>
-                  <td className="px-4 py-3 text-sm">23.58</td>
-                  <td className="px-4 py-3 text-sm">20.61</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">CA</td>
-                  <td className="px-4 py-3 text-sm">333.26</td>
-                  <td className="px-4 py-3 text-sm">324.31</td>
-                  <td className="px-4 py-3 text-sm">254.00</td>
-                  <td className="px-4 py-3 text-sm">203.76</td>
-                  <td className="px-4 py-3 text-sm">172.29</td>
-                  <td className="px-4 py-3 text-sm">147.95</td>
-                  <td className="px-4 py-3 text-sm">135.43</td>
-                  <td className="px-4 py-3 text-sm">124.88</td>
-                  <td className="px-4 py-3 text-sm">135.14</td>
-                  <td className="px-4 py-3 text-sm">136.32</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Total Assets</td>
-                  <td className="px-4 py-3 text-sm">534.74</td>
-                  <td className="px-4 py-3 text-sm">434.27</td>
-                  <td className="px-4 py-3 text-sm">348.68</td>
-                  <td className="px-4 py-3 text-sm">289.99</td>
-                  <td className="px-4 py-3 text-sm">254.94</td>
-                  <td className="px-4 py-3 text-sm">230.11</td>
-                  <td className="px-4 py-3 text-sm">204.59</td>
-                  <td className="px-4 py-3 text-sm">198.22</td>
-                  <td className="px-4 py-3 text-sm">196.45</td>
-                  <td className="px-4 py-3 text-sm">192.82</td>
-                </tr>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {[
+                  { name: 'Equity', values: [366.32, 280.22, 211.10, 158.39, 117.82, 92.16, 56.92, 41.02, 26.47, 22.73] },
+                  { name: 'Liabilities', values: [168.41, 154.06, 137.58, 131.60, 137.12, 137.95, 147.67, 157.19, 169.98, 170.08] },
+                  { name: 'NCL', values: [15.77, 16.44, 16.03, 16.05, 20.03, 21.73, 19.31, 17.26, 21.25, 17.83] },
+                  { name: 'CL', values: [152.64, 137.62, 121.55, 115.55, 117.09, 116.22, 128.36, 139.93, 148.73, 152.25] },
+                  { name: 'Total Equity and Liability', values: [534.74, 434.27, 348.68, 289.99, 254.94, 230.11, 204.59, 198.22, 196.45, 192.82], isTotal: true },
+                  { name: 'Net Fixed Assets', values: [84.71, 71.78, 61.37, 58.57, 52.54, 46.51, 30.14, 29.13, 31.80, 29.67] },
+                  { name: 'Capital WIP', values: [12.12, 10.16, 8.03, 7.30, 8.97, 8.28, 6.48, 7.17, 5.93, 6.22] },
+                  { name: 'Other NCA', values: [104.65, 28.02, 25.29, 20.35, 21.14, 27.37, 32.54, 37.04, 23.58, 20.61] },
+                  { name: 'CA', values: [333.26, 324.31, 254.00, 203.76, 172.29, 147.95, 135.43, 124.88, 135.14, 136.32] },
+                  { name: 'Total Assets', values: [534.74, 434.27, 348.68, 289.99, 254.94, 230.11, 204.59, 198.22, 196.45, 192.82], isTotal: true },
+                ].map((row, rowIdx) => (
+                  <tr key={rowIdx} className={row.isTotal ? 'bg-gray-50 font-semibold' : 'hover:bg-gray-50'}>
+                    <td className={`px-6 py-3 whitespace-nowrap text-sm font-medium ${row.isTotal ? 'text-gray-900' : 'text-gray-700'} sticky left-0 ${row.isTotal ? 'bg-gray-50' : 'bg-white'} z-10`}>
+                      {row.name}
+                    </td>
+                    {row.values.map((value, colIdx) => (
+                      <td key={colIdx} className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-600">
+                        {value.toLocaleString('en-IN')}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white rounded-lg overflow-hidden">
-              <thead className="bg-gray-100">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Particulars</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY20</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY19</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY18</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY17</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">FY16</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-10">Particulars</th>
+                  {[...Array(5)].map((_, i) => (
+                    <th key={i} className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      FY{20 - i}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Equity</td>
-                  <td className="px-4 py-3 text-sm">117.82</td>
-                  <td className="px-4 py-3 text-sm">92.17</td>
-                  <td className="px-4 py-3 text-sm">58.73</td>
-                  <td className="px-4 py-3 text-sm">43.05</td>
-                  <td className="px-4 py-3 text-sm">28.65</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Liabilities</td>
-                  <td className="px-4 py-3 text-sm">137.12</td>
-                  <td className="px-4 py-3 text-sm">137.95</td>
-                  <td className="px-4 py-3 text-sm">147.67</td>
-                  <td className="px-4 py-3 text-sm">157.19</td>
-                  <td className="px-4 py-3 text-sm">169.98</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Total Equity and Liability</td>
-                  <td className="px-4 py-3 text-sm">254.94</td>
-                  <td className="px-4 py-3 text-sm">230.12</td>
-                  <td className="px-4 py-3 text-sm">206.40</td>
-                  <td className="px-4 py-3 text-sm">200.25</td>
-                  <td className="px-4 py-3 text-sm">198.63</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Net Fixed Assets</td>
-                  <td className="px-4 py-3 text-sm">52.54</td>
-                  <td className="px-4 py-3 text-sm">46.51</td>
-                  <td className="px-4 py-3 text-sm">30.14</td>
-                  <td className="px-4 py-3 text-sm">29.13</td>
-                  <td className="px-4 py-3 text-sm">31.80</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Capital WIP</td>
-                  <td className="px-4 py-3 text-sm">8.97</td>
-                  <td className="px-4 py-3 text-sm">8.28</td>
-                  <td className="px-4 py-3 text-sm">6.48</td>
-                  <td className="px-4 py-3 text-sm">7.17</td>
-                  <td className="px-4 py-3 text-sm">5.93</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Other NCA</td>
-                  <td className="px-4 py-3 text-sm">21.14</td>
-                  <td className="px-4 py-3 text-sm">27.38</td>
-                  <td className="px-4 py-3 text-sm">34.35</td>
-                  <td className="px-4 py-3 text-sm">39.07</td>
-                  <td className="px-4 py-3 text-sm">25.76</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">CA</td>
-                  <td className="px-4 py-3 text-sm">172.29</td>
-                  <td className="px-4 py-3 text-sm">147.95</td>
-                  <td className="px-4 py-3 text-sm">135.43</td>
-                  <td className="px-4 py-3 text-sm">124.88</td>
-                  <td className="px-4 py-3 text-sm">135.14</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-800">Total Assets</td>
-                  <td className="px-4 py-3 text-sm">254.94</td>
-                  <td className="px-4 py-3 text-sm">230.12</td>
-                  <td className="px-4 py-3 text-sm">206.40</td>
-                  <td className="px-4 py-3 text-sm">200.25</td>
-                  <td className="px-4 py-3 text-sm">198.63</td>
-                </tr>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {[
+                  { name: 'Equity', values: [117.82, 92.17, 58.73, 43.05, 28.65] },
+                  { name: 'Liabilities', values: [137.12, 137.95, 147.67, 157.19, 169.98] },
+                  { name: 'Total Equity and Liability', values: [254.94, 230.12, 206.40, 200.25, 198.63], isTotal: true },
+                  { name: 'Net Fixed Assets', values: [52.54, 46.51, 30.14, 29.13, 31.80] },
+                  { name: 'Capital WIP', values: [8.97, 8.28, 6.48, 7.17, 5.93] },
+                  { name: 'Other NCA', values: [21.14, 27.38, 34.35, 39.07, 25.76] },
+                  { name: 'CA', values: [172.29, 147.95, 135.43, 124.88, 135.14] },
+                  { name: 'Total Assets', values: [254.94, 230.12, 206.40, 200.25, 198.63], isTotal: true },
+                ].map((row, rowIdx) => (
+                  <tr key={rowIdx} className={row.isTotal ? 'bg-gray-50 font-semibold' : 'hover:bg-gray-50'}>
+                    <td className={`px-6 py-3 whitespace-nowrap text-sm font-medium ${row.isTotal ? 'text-gray-900' : 'text-gray-700'} sticky left-0 ${row.isTotal ? 'bg-gray-50' : 'bg-white'} z-10`}>
+                      {row.name}
+                    </td>
+                    {row.values.map((value, colIdx) => (
+                      <td key={colIdx} className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-600">
+                        {value.toLocaleString('en-IN')}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         )}
       </div>
+
+      {/* Key Insights */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h4 className="text-lg font-semibold mb-4 text-gray-800">Balance Sheet Insights</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <h5 className="font-medium text-gray-800 mb-2">Strengths</h5>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Growing Equity:</strong> Equity has increased from ₹22.73 Cr in FY15 to ₹366.32 Cr in FY24 (16x growth)
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Asset Growth:</strong> Total assets have grown consistently from ₹192.82 Cr to ₹534.74 Cr
+              </li>
+            </ul>
+          </div>
+          <div className="space-y-3">
+            <h5 className="font-medium text-gray-800 mb-2">Trends</h5>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Liability Management:</strong> Total liabilities have reduced from ₹170.08 Cr to ₹168.41 Cr
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Fixed Assets:</strong> Net fixed assets nearly tripled from ₹29.67 Cr to ₹84.71 Cr
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
-  
 case 'profit-loss':
   const standaloneYears = ['FY24', 'FY23', 'FY22', 'FY21', 'FY20', 'FY19', 'FY18', 'FY17', 'FY16', 'FY15'];
   const consolidatedYears = ['FY20', 'FY19', 'FY18', 'FY17', 'FY16'];
