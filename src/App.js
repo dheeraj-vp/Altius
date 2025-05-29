@@ -129,7 +129,116 @@ const companiesData = {
   }
 };
 
+// Reusable Ratio Card Component
+const RatioCard = ({ title, data, years, unit = "", colorScheme = "blue", trend = null }) => {
+  const getColorClasses = (scheme) => {
+    const colors = {
+      blue: { bg: 'bg-blue-50', border: 'border-blue-500', text: 'text-blue-800', header: 'bg-blue-100' },
+      green: { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-800', header: 'bg-green-100' },
+      purple: { bg: 'bg-purple-50', border: 'border-purple-500', text: 'text-purple-800', header: 'bg-purple-100' },
+      orange: { bg: 'bg-orange-50', border: 'border-orange-500', text: 'text-orange-800', header: 'bg-orange-100' },
+      red: { bg: 'bg-red-50', border: 'border-red-500', text: 'text-red-800', header: 'bg-red-100' }
+    };
+    return colors[scheme] || colors.blue;
+  };
 
+  const colors = getColorClasses(colorScheme);
+  
+  return (
+    <div className={`${colors.bg} rounded-lg p-4 border-l-4 ${colors.border}`}>
+      <div className="flex justify-between items-center mb-3">
+        <h5 className={`font-semibold ${colors.text}`}>{title}</h5>
+        {trend && (
+          <span className={`text-xs px-2 py-1 rounded-full ${colors.header} ${colors.text}`}>
+            {trend > 0 ? '↗' : trend < 0 ? '↘' : '→'} {trend !== 0 ? `${Math.abs(trend)}%` : 'Stable'}
+          </span>
+        )}
+      </div>
+      <div className="grid grid-cols-5 gap-2">
+        {years.map((year, index) => (
+          <div key={year} className="text-center">
+            <div className="text-xs text-gray-600 mb-1">{year.replace('31-Mar-', '')}</div>
+            <div className={`text-sm font-medium ${colors.text}`}>
+              {data[index]}{unit}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Reusable Peer Table Component
+const PeerTable = ({ title, data, className = "" }) => (
+  <div className={`bg-white rounded-lg p-6 shadow-sm ${className}`}>
+    <h4 className="text-lg font-semibold mb-4 text-gray-800">{title}</h4>
+    <div className="overflow-x-auto">
+      <table className="min-w-full">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Company Name</th>
+            <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">Revenue (₹ Cr)</th>
+            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">City</th>
+            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">CIN</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {data.map((company, index) => (
+            <tr key={index} className={company.isHighlight ? 'bg-blue-50' : 'hover:bg-gray-50'}>
+              <td className="px-4 py-3 text-sm font-medium text-gray-800">
+                {company.name}
+                {company.isHighlight && (
+                  <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    Current Company
+                  </span>
+                )}
+              </td>
+              <td className="px-4 py-3 text-sm text-right font-medium text-gray-700">
+                {company.revenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </td>
+              <td className="px-4 py-3 text-sm text-gray-700">{company.city}</td>
+              <td className="px-4 py-3 text-sm text-gray-600 font-mono">{company.cin}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+// Chart Component for Ratio Trends
+const RatioChart = ({ title, ratios, years }) => (
+  <div className="bg-white rounded-lg p-6 shadow-sm">
+    <h4 className="text-lg font-semibold mb-4 text-gray-800">{title}</h4>
+    <div className="space-y-4">
+      {ratios.map((ratio, index) => {
+        const maxValue = Math.max(...ratio.data);
+        return (
+          <div key={index} className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-gray-700">{ratio.name}</span>
+              <span className="text-xs text-gray-500">{ratio.data[0]}{ratio.unit} (Latest)</span>
+            </div>
+            <div className="flex space-x-1 h-8">
+              {ratio.data.map((value, idx) => (
+                <div key={idx} className="flex-1 flex flex-col justify-end">
+                  <div 
+                    className={`${ratio.color} rounded-t transition-all duration-300 hover:opacity-80`}
+                    style={{ height: `${(value / maxValue) * 100}%`, minHeight: '4px' }}
+                    title={`${years[idx].replace('31-Mar-', '')}: ${value}${ratio.unit}`}
+                  ></div>
+                  <div className="text-xs text-center text-gray-500 mt-1">
+                    {years[idx].replace('31-Mar-', '')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+);
 
 const App = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
@@ -203,6 +312,221 @@ const [activeBalanceSheetTab, setActiveBalanceSheetTab] = useState("overview"); 
     if (!selectedCompany) return null;
 
 switch (activeTab) {
+
+// Main Ancillary Analysis Component
+case 'ancillary':
+  const years = ['31-Mar-2020', '31-Mar-2019', '31-Mar-2018', '31-Mar-2017', '31-Mar-2016'];
+  
+  const ratioData = {
+    revenueGrowth: [7.70, 44.50, 12.90, 31.20, 0.00],
+    ebitdaMargin: [4.20, 5.30, 2.80, 2.50, 2.30],
+    netMargin: [2.60, 3.50, 2.30, 0.80, 0.80],
+    roe: [22.40, 36.00, 26.10, 10.80, 12.40],
+    debtEquity: [0.10, 0.10, 0.50, 1.10, 1.90],
+    inventoryDays: [26.00, 25.00, 31.00, 34.00, 41.00],
+    debtorDays: [24.00, 20.00, 32.00, 34.00, 53.00],
+    payableDays: [25.00, 25.00, 37.00, 40.00, 60.00],
+    cashCycle: [26.00, 20.00, 26.00, 28.00, 34.00],
+    assetTurnover: [19.40, 20.40, 21.80, 19.90, 13.90]
+  };
+
+  const peerData = [
+    { name: 'AVADH SUGAR & ENERGY LIMITED', revenue: 2693.51, city: 'SITAPUR', cin: 'L15122UP2015PLC069635' },
+    { name: 'DCM SHRIRAM INDUSTRIES LIMITED', revenue: 2082.90, city: 'NEW DELHI', cin: 'L74899DL1989PLC035140' },
+    { name: 'MOHAN MEAKIN LIMITED', revenue: 1929.92, city: 'SOLAN', cin: 'L15520HP1934PLC000135', isHighlight: true },
+    { name: 'RAJASTHAN LIQUORS LIMITED', revenue: 1867.43, city: 'KANPUR', cin: 'U15531UP1998PLC028079' },
+    { name: 'BCL INDUSTRIES LIMITED', revenue: 1697.26, city: 'BATHINDA', cin: 'L24231PB1976PLC003624' }
+  ];
+
+  // Calculate trends
+  const revenueGrowthTrend = ratioData.revenueGrowth[0] - ratioData.revenueGrowth[1];
+  const roeTrend = ratioData.roe[0] - ratioData.roe[1];
+  const debtEquityTrend = ratioData.debtEquity[1] - ratioData.debtEquity[0]; // Reversed for better interpretation
+
+  const chartRatios = [
+    { name: 'Revenue Growth (%)', data: ratioData.revenueGrowth, unit: '%', color: 'bg-blue-500' },
+    { name: 'EBITDA Margin (%)', data: ratioData.ebitdaMargin, unit: '%', color: 'bg-green-500' },
+    { name: 'Net Margin (%)', data: ratioData.netMargin, unit: '%', color: 'bg-purple-500' },
+    { name: 'Return on Equity (%)', data: ratioData.roe, unit: '%', color: 'bg-orange-500' }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader 
+        title="Ancillary Analysis" 
+        subtitle="Comprehensive ratio analysis and peer comparison"
+        gradient="from-teal-50 to-cyan-50"
+      />
+
+      {/* Key Ratio Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <MetricCard 
+          title="Latest Revenue Growth"
+          value="7.7%"
+          change={revenueGrowthTrend}
+          isPercentage={true}
+        />
+        <MetricCard 
+          title="Return on Equity"
+          value="22.4%"
+          change={roeTrend}
+          isPercentage={true}
+        />
+        <MetricCard 
+          title="Debt/Equity Ratio"
+          value="0.10"
+          change={debtEquityTrend}
+        />
+      </div>
+
+      {/* Profitability Ratios */}
+      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+        <h4 className="text-lg font-semibold mb-6 text-gray-800">Profitability Analysis</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <RatioCard 
+            title="Revenue Growth (%)"
+            data={ratioData.revenueGrowth}
+            years={years}
+            unit="%"
+            colorScheme="blue"
+            trend={revenueGrowthTrend}
+          />
+          <RatioCard 
+            title="EBITDA Margin (%)"
+            data={ratioData.ebitdaMargin}
+            years={years}
+            unit="%"
+            colorScheme="green"
+          />
+          <RatioCard 
+            title="Net Margin (%)"
+            data={ratioData.netMargin}
+            years={years}
+            unit="%"
+            colorScheme="purple"
+          />
+          <RatioCard 
+            title="Return on Equity (%)"
+            data={ratioData.roe}
+            years={years}
+            unit="%"
+            colorScheme="orange"
+            trend={roeTrend}
+          />
+        </div>
+      </div>
+
+      {/* Leverage & Efficiency Ratios */}
+      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+        <h4 className="text-lg font-semibold mb-6 text-gray-800">Leverage & Efficiency Analysis</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <RatioCard 
+            title="Debt / Equity"
+            data={ratioData.debtEquity}
+            years={years}
+            colorScheme="red"
+          />
+          <RatioCard 
+            title="Sales / Net Fixed Assets"
+            data={ratioData.assetTurnover}
+            years={years}
+            unit="x"
+            colorScheme="blue"
+          />
+        </div>
+      </div>
+
+      {/* Working Capital Analysis */}
+      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+        <h4 className="text-lg font-semibold mb-6 text-gray-800">Working Capital Analysis</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <RatioCard 
+            title="Inventory Days"
+            data={ratioData.inventoryDays}
+            years={years}
+            unit=" days"
+            colorScheme="green"
+          />
+          <RatioCard 
+            title="Debtor Days"
+            data={ratioData.debtorDays}
+            years={years}
+            unit=" days"
+            colorScheme="orange"
+          />
+          <RatioCard 
+            title="Payable Days"
+            data={ratioData.payableDays}
+            years={years}
+            unit=" days"
+            colorScheme="purple"
+          />
+          <RatioCard 
+            title="Cash Conversion Cycle"
+            data={ratioData.cashCycle}
+            years={years}
+            unit=" days"
+            colorScheme="blue"
+          />
+        </div>
+      </div>
+
+      {/* Ratio Trends Visualization */}
+      <RatioChart 
+        title="Key Ratio Trends (5-Year)"
+        ratios={chartRatios}
+        years={years}
+      />
+
+      {/* Peer Comparison */}
+      <PeerTable 
+        title="Peer Comparison by Revenue"
+        data={peerData}
+        className="mb-6"
+      />
+
+      {/* Key Insights */}
+      <div className="bg-white rounded-lg p-6 shadow-sm">
+        <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Insights</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <h5 className="font-medium text-gray-800 mb-2">Strengths</h5>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Low Debt Burden:</strong> Debt/Equity ratio at 0.10, indicating strong financial stability
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Strong ROE:</strong> 22.4% return on equity demonstrates efficient use of shareholder funds
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Efficient Working Capital:</strong> Cash conversion cycle of 26 days shows good liquidity management
+              </li>
+            </ul>
+          </div>
+          <div className="space-y-3">
+            <h5 className="font-medium text-gray-800 mb-2">Areas for Improvement</h5>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Revenue Growth:</strong> Slowdown from 44.5% to 7.7% needs attention
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Margin Pressure:</strong> EBITDA margin declined from 5.3% to 4.2%
+              </li>
+              <li className="flex items-start">
+                <span className="inline-block w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <strong>Peer Position:</strong> Revenue rank 3rd among top 5 peers, with growth potential
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   case 'price':
     return (
       <div className="space-y-6">
