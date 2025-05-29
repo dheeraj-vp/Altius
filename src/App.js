@@ -208,26 +208,31 @@ const PeerTable = ({ title, data, className = "" }) => (
 
 // Chart Component for Ratio Trends
 const RatioChart = ({ title, ratios, years }) => (
-  <div className="bg-white rounded-lg p-6 shadow-sm">
-    <h4 className="text-lg font-semibold mb-4 text-gray-800">{title}</h4>
-    <div className="space-y-4">
+  <div className="bg-white rounded-2xl p-6 shadow-md">
+    <h4 className="text-xl font-semibold mb-6 text-gray-900">{title}</h4>
+    <div className="space-y-6">
       {ratios.map((ratio, index) => {
         const maxValue = Math.max(...ratio.data);
         return (
           <div key={index} className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">{ratio.name}</span>
-              <span className="text-xs text-gray-500">{ratio.data[0]}{ratio.unit} (Latest)</span>
+              <span className="text-base font-medium text-gray-800">{ratio.name}</span>
+              <span className="text-sm text-gray-500">
+                {ratio.data[0]}{ratio.unit} <span className="text-xs">(Latest)</span>
+              </span>
             </div>
-            <div className="flex space-x-1 h-8">
+            <div className="flex items-end space-x-3 h-24 px-2 bg-gray-50 rounded-lg overflow-hidden">
               {ratio.data.map((value, idx) => (
-                <div key={idx} className="flex-1 flex flex-col justify-end">
-                  <div 
-                    className={`${ratio.color} rounded-t transition-all duration-300 hover:opacity-80`}
-                    style={{ height: `${(value / maxValue) * 100}%`, minHeight: '4px' }}
+                <div key={idx} className="flex-1 flex flex-col items-center group relative">
+                  <div
+                    className={`w-4 ${ratio.color} rounded-md transition-all duration-300 group-hover:opacity-80`}
+                    style={{
+                      height: `${(value / maxValue) * 100}%`,
+                      minHeight: '6px',
+                    }}
                     title={`${years[idx].replace('31-Mar-', '')}: ${value}${ratio.unit}`}
-                  ></div>
-                  <div className="text-xs text-center text-gray-500 mt-1">
+                  />
+                  <div className="text-[10px] text-gray-500 mt-1">
                     {years[idx].replace('31-Mar-', '')}
                   </div>
                 </div>
@@ -240,6 +245,27 @@ const RatioChart = ({ title, ratios, years }) => (
   </div>
 );
 
+const PressCard = ({ title, excerpt, date, link }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow duration-200">
+      <div className="p-5">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-semibold text-gray-800 line-clamp-2">{title}</h3>
+        </div>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3">{excerpt}</p>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-gray-500">{date}</span>
+          <a 
+            href={link} 
+            className="text-sm font-medium text-blue-600 hover:text-blue-800"
+          >
+            Read More →
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
 const App = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
@@ -312,7 +338,80 @@ const [activeBalanceSheetTab, setActiveBalanceSheetTab] = useState("overview"); 
     if (!selectedCompany) return null;
 
 switch (activeTab) {
+case 'press':
+  const pressData = [
+    {
+      title: "Mohan Meakin Reports Strong FY25 Results",
+      excerpt: "Explore Mohan Meakin's Full FY25 Financial Performance, Dividend Announcement & Strategic Insights.",
+      date: "1 day ago",
+      link: "#"
+    },
+    {
+      title: "Mohan Meakin Ltd Financial Performance Highlights – Q3 and 9M FY25",
+      excerpt: "The company demonstrated strong financial growth in Q3 FY25, with Revenue from Operations rising to ₹820.40 crore, a 22% YoY increase from ₹674.18 crore in Q3 FY24.",
+      date: "3 months ago",
+      link: "#"
+    },
+    {
+      title: "Mohan Meakin Ltd Independent Auditor Review Report on FY25 June Quarter",
+      excerpt: "Mohan Meakin Ltd Financial Informations",
+      date: "1 year ago",
+      link: "#"
+    },
+    {
+      title: "This long summer is really refreshing for beer makers positive for Mohan Meakin",
+      excerpt: "As scorching heat overwhelms large parts of the country, beer makers are betting on a prolonged dry season to make up for the losses they suffered during the pandemic.",
+      date: "3 years ago",
+      link: "#"
+    },
+    {
+      title: "Riding on innovation, Old Monk eyes record 10 million sales next year",
+      excerpt: "With innovations such as the introduction of new variants and the launch of tetra packs, Mohan Meakin aims to achieve record high sales of around 10 million units of Old Monk.",
+      date: "4 years ago",
+      link: "#"
+    },
+    {
+      title: "Beer Sales in India stands ₹55000-60000 crs annually - positive for Mohan Meakin",
+      excerpt: "Beer sales in India stands ₹55,000-60000 Crs annually! It's 8 times more than bottled water, 12 times more than Coffee & 3 times more than Tea sales.",
+      date: "4 years ago",
+      link: "#"
+    },
+    {
+      title: "2021 India Beer Market Report, Featuring Mohan Meakin Ltd.",
+      excerpt: "The beer market is slowly gaining prominence, owing to an increase in disposable income, preference for low-alcohol beverage, and growing social acceptance.",
+      date: "4 years ago",
+      link: "#"
+    },
+    {
+      title: "Nostalgia and a secret recipe — What makes Old Monk India's favourite alcohol",
+      excerpt: "According to legend, a rum-loving British monk would be seen lurking around the rum barrels belonging to Mohan Meakin in Kasauli, Himachal Pradesh.",
+      date: "4 years ago",
+      link: "#"
+    }
+  ];
 
+  return (
+    <div className="space-y-6">
+      <SectionHeader 
+        title="Press Coverage" 
+        subtitle="Recent news and media mentions about the company"
+        gradient="from-blue-50 to-indigo-50"
+      />
+
+      {/* Press Release Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {pressData.map((item, index) => (
+          <PressCard
+            key={index}
+            title={item.title}
+            excerpt={item.excerpt}
+            date={item.date}
+            link={item.link}
+          />
+        ))}
+      </div>
+    </div>
+  );
 // Main Ancillary Analysis Component
 case 'ancillary':
   const years = ['31-Mar-2020', '31-Mar-2019', '31-Mar-2018', '31-Mar-2017', '31-Mar-2016'];
@@ -1582,7 +1681,7 @@ case 'profit-loss':
             <div className="flex items-center gap-3">
               <TrendingUp className="text-blue-600" size={32} />
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                InvestTech Analytics
+                CalQuity Reseach
               </h1>
             </div>
             
