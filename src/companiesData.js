@@ -195,6 +195,16 @@ export const companiesData = {
         link: "#"
       }
     ],
+    shareholders: [
+    {
+      "name": "VINAY MOHAN",
+      "holdings_percentage": 8.21
+    },
+    {
+      "name": "Other",
+      "holdings_percentage": 91.79
+    }
+  ],
     priceData: {
       marketCap: "₹1,871.01 Cr",
       industryPE: 70,
@@ -306,7 +316,7 @@ balanceSheet: {
       "EBITDA Margin improved from 1.3% to 5.8%",
       "PAT Margin improved from 0.9% to 4.4%",
       "Finance costs reduced significantly over the years"
-    ]
+    ],
   }
 }
 
@@ -472,6 +482,40 @@ balanceSheet: {
         link: "#"
       }
     ],
+    shareholders: [
+    {
+      "name": "Life Insurance Corporation of India",
+      "holdings_percentage": 10.72
+    },
+    {
+      "name": "Aranda Investments Mauritius PTE Ltd",
+      "holdings_percentage": 5.00
+    },
+    {
+      "name": "Veracity Investments Limited, Mauritius",
+      "holdings_percentage": 5.00
+    },
+    {
+      "name": "Stock Holding Corporation of India Limited",
+      "holdings_percentage": 4.44
+    },
+    {
+      "name": "SBI Capital Markets Ltd",
+      "holdings_percentage": 4.33
+    },
+    {
+      "name": "SAIF II SE Investments Mauritius Limited",
+      "holdings_percentage": 3.55
+    },
+    {
+      "name": "State Bank of India",
+      "holdings_percentage": 3.23
+    },
+    {
+      "name": "Other",
+      "holdings_percentage": 63.73
+    }
+  ],
     priceData: {
       marketCap: "₹5,69,250.00 Cr",
       industryPE: 82,
@@ -588,7 +632,7 @@ profitLoss: {
     { label: 'PAT from Continuing Operations', values: [11605.75, 8405.94, 7413.38, 5108.01, 3507.52, 1772.21, 1601.01, 1339.13, 1107.15] },
     { label: 'Minority interest, JV, associates', values: [581.94, -100.54, 88.50, 90.28, 66.20, 112.31, 107.03, 122.34, 111.67] },
     { label: 'PAT', values: [12187.69, 8305.40, 7501.88, 5198.29, 3573.72, 1884.52, 1708.04, 1461.47, 1218.82], isHighlight: true }
-  ]
+  ],
 }
 
   },
@@ -663,6 +707,12 @@ balanceSheet: {
     ]
   }
 },
+shareholders: [
+    {
+      "name": "InCred Holdings Limited (formerly known as KKR Capital Markets Private Limited)",
+      "holdings_percentage": 1.00
+    }
+],
 profitLoss: {
   standaloneYears: ['FY24', 'FY23', 'FY22', 'FY21', 'FY20', 'FY19', 'FY18', 'FY17', 'FY16', 'FY15'],
   standaloneData: [

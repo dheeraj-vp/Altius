@@ -479,6 +479,56 @@ const InsightsTab = ({ company }) => {
   );
 };
 
+const ShareholdingTab = ({ company }) => {
+  console.log('Company Data:', company); // Debugging line to log the entire company object
+  console.log('Shareholders Data:', company.shareholders); // Debugging line
+  if (!company.shareholders) {
+    return (
+      <div className="space-y-6">
+        <SectionHeader 
+          title="Shareholding" 
+          subtitle="Detailed breakdown of shareholding"
+          gradient="from-indigo-50 to-purple-50"
+        />
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <p className="text-gray-600">Shareholding data is not available for this company.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader 
+        title="Shareholding" 
+        subtitle="Detailed breakdown of shareholding"
+        gradient="from-indigo-50 to-purple-50"
+      />
+      <div className="bg-white rounded-lg p-6 shadow-sm">
+        <h4 className="text-lg font-semibold mb-4 text-gray-800">Shareholding Details</h4>
+        <div className="overflow-x-auto">
+          <table className="min-w-full">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Category</th>
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">Percentage</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {company.shareholders.map((item, index) => (
+                <tr key={index}>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-800">{item.name}</td>
+                  <td className="px-4 py-3 text-sm text-right text-gray-700">{item.holdings_percentage}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AncillaryTab = ({ company }) => {
   if (!company.ancillary) {
     return (
@@ -1034,6 +1084,7 @@ const App = () => {
     { id: 'insights', label: 'Insights', component: InsightsTab },
     { id: 'balance-sheet', label: 'Balance Sheet', component: BalanceSheetTab },
     { id: 'profit-loss', label: 'Profit & Loss', component: ProfitLossTab },
+    { id: 'shareholding', label: 'Shareholding', component: ShareholdingTab },
     { id: 'ancillary', label: 'Ancillary', component: AncillaryTab },
     { id: 'press', label: 'Press', component: PressTab },
   ];
