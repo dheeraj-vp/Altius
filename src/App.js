@@ -292,14 +292,14 @@ const CompanyCard = ({ company, onClick }) => {
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-500">Market Cap</p>
-            <p className="font-semibold text-gray-700">{company.overview.marketCap}</p>
+            <p className="font-semibold text-gray-700">{company.overview?.marketCap || 'N/A'}</p>
           </div>
         </div>
         
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Sector:</span>
-            <span className="font-medium text-gray-700">{company.overview.sector}</span>
+            <span className="font-medium text-gray-700">{company.overview?.sector || 'N/A'}</span>
           </div>
         </div>
       </div>
@@ -365,99 +365,146 @@ const OverviewTab = ({ company }) => (
   </div>
 );
 
-const InsightsTab = ({ company }) => (
-  <div className="space-y-6">
-    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6">Key Insights</h3>
-      
-      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-        <h4 className="text-lg font-semibold mb-4">Revenue Segmentation</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h5 className="font-medium text-gray-800 mb-3">Product Line</h5>
+const InsightsTab = ({ company }) => {
+  if (!company.insights) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
+          <h3 className="text-2xl font-bold text-gray-800 mb-6">Key Insights</h3>
+          <div className="bg-white rounded-lg p-6 shadow-sm">
+            <p className="text-gray-600">Insights data is not available for this company.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
+        <h3 className="text-2xl font-bold text-gray-800 mb-6">Key Insights</h3>
+        
+        {company.insights.revenueSegmentation && company.insights.revenueSegmentation.length > 0 && (
+          <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+            <h4 className="text-lg font-semibold mb-4">Revenue Segmentation</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h5 className="font-medium text-gray-800 mb-3">Product Line</h5>
+                <div className="space-y-3">
+                  {company.insights.revenueSegmentation.map((segment, idx) => (
+                    <div key={idx} className="flex justify-between items-center border-b pb-2">
+                      <span className="text-gray-600">{segment.product}</span>
+                      <span className="font-bold">{segment.percentage}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="w-40 h-40 rounded-full border-8 border-blue-500 relative">
+                  <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-300 rounded-tr-full"></div>
+                  <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-green-300 rounded-br-full"></div>
+                  <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-purple-300 rounded-bl-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {company.insights.financials && company.insights.financials.length > 0 && (
+          <FinancialTable 
+            title="Financials (₹ in Crores)"
+            data={company.insights.financials}
+            years={['FY24', 'FY23', 'FY22']}
+            className="mb-6"
+          />
+        )}
+
+        {company.insights.quarterlyFinancials && company.insights.quarterlyFinancials.length > 0 && (
+          <FinancialTable 
+            title="Quarterly Financial Highlights"
+            data={company.insights.quarterlyFinancials}
+            years={['Q3 FY24', 'Q3 FY23', '9M FY24', '9M FY23']}
+            className="mb-6"
+          />
+        )}
+
+        {company.insights.expenses && company.insights.expenses.length > 0 && (
+          <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+            <h4 className="text-lg font-semibold mb-4">Expense Overview (Q3 FY24)</h4>
             <div className="space-y-3">
-              {company.insights.revenueSegmentation.map((segment, idx) => (
-                <div key={idx} className="flex justify-between items-center border-b pb-2">
-                  <span className="text-gray-600">{segment.product}</span>
-                  <span className="font-bold">{segment.percentage}%</span>
+              {company.insights.expenses.map((expense, idx) => (
+                <div key={idx} className="flex justify-between">
+                  <span className="text-gray-600">{expense.category}:</span>
+                  <span className="font-medium">{expense.value}</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex items-center justify-center">
-            <div className="w-40 h-40 rounded-full border-8 border-blue-500 relative">
-              <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-300 rounded-tr-full"></div>
-              <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-green-300 rounded-br-full"></div>
-              <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-purple-300 rounded-bl-full"></div>
+        )}
+
+        {company.insights.industryOverview && company.insights.industryOverview.points && company.insights.industryOverview.points.length > 0 && (
+          <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+            <h4 className="text-lg font-semibold mb-4">Industry Overview</h4>
+            <div className="space-y-4">
+              <p className="text-gray-700">
+                {company.insights.industryOverview.description}
+              </p>
+              <ul className="space-y-3 list-disc pl-5">
+                {company.insights.industryOverview.points.map((point, idx) => (
+                  <li key={idx} className="text-gray-700">{point}</li>
+                ))}
+              </ul>
             </div>
           </div>
-        </div>
+        )}
+
+        {company.insights.peerComparison && company.insights.peerComparison.length > 0 && (
+          <FinancialTable 
+            title="Peer Comparison (₹ in Crores)"
+            data={company.insights.peerComparison}
+            years={['Particulars', 'Mohan Meakin Ltd', 'Tilaknagar Industries', 'Som Distilleries', 'Radico Khaitan']}
+            className="mb-6"
+          />
+        )}
       </div>
-
-      <FinancialTable 
-        title="Financials (₹ in Crores)"
-        data={company.insights.financials}
-        years={['FY24', 'FY23', 'FY22']}
-        className="mb-6"
-      />
-
-      <FinancialTable 
-        title="Quarterly Financial Highlights"
-        data={company.insights.quarterlyFinancials}
-        years={['Q3 FY24', 'Q3 FY23', '9M FY24', '9M FY23']}
-        className="mb-6"
-      />
-
-      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-        <h4 className="text-lg font-semibold mb-4">Expense Overview (Q3 FY24)</h4>
-        <div className="space-y-3">
-          {company.insights.expenses.map((expense, idx) => (
-            <div key={idx} className="flex justify-between">
-              <span className="text-gray-600">{expense.category}:</span>
-              <span className="font-medium">{expense.value}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-        <h4 className="text-lg font-semibold mb-4">Industry Overview</h4>
-        <div className="space-y-4">
-          <p className="text-gray-700">
-            {company.insights.industryOverview.description}
-          </p>
-          <ul className="space-y-3 list-disc pl-5">
-            {company.insights.industryOverview.points.map((point, idx) => (
-              <li key={idx} className="text-gray-700">{point}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <FinancialTable 
-        title="Peer Comparison (₹ in Crores)"
-        data={company.insights.peerComparison}
-        years={['Particulars', 'Mohan Meakin Ltd', 'Tilaknagar Industries', 'Som Distilleries', 'Radico Khaitan']}
-        className="mb-6"
-      />
     </div>
-  </div>
-);
+  );
+};
 
 const AncillaryTab = ({ company }) => {
-  const years = company.ancillary.years;
-  const ratioData = company.ancillary.ratioData;
-  const peerData = company.ancillary.peerData;
+  if (!company.ancillary) {
+    return (
+      <div className="space-y-6">
+        <SectionHeader 
+          title="Ancillary Analysis" 
+          subtitle="Comprehensive ratio analysis and peer comparison"
+          gradient="from-teal-50 to-cyan-50"
+        />
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <p className="text-gray-600">Ancillary data is not available for this company.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const years = company.ancillary.years || [];
+  const ratioData = company.ancillary.ratioData || {};
+  const peerData = company.ancillary.peerData || [];
   
-  const revenueGrowthTrend = ratioData.revenueGrowth[0] - ratioData.revenueGrowth[1];
-  const roeTrend = ratioData.roe[0] - ratioData.roe[1];
-  const debtEquityTrend = ratioData.debtEquity[1] - ratioData.debtEquity[0];
+  const revenueGrowthTrend = ratioData.revenueGrowth?.[0] && ratioData.revenueGrowth?.[1] ? 
+    ratioData.revenueGrowth[0] - ratioData.revenueGrowth[1] : 0;
+  
+  const roeTrend = ratioData.roe?.[0] && ratioData.roe?.[1] ? 
+    ratioData.roe[0] - ratioData.roe[1] : 0;
+  
+  const debtEquityTrend = ratioData.debtEquity?.[0] && ratioData.debtEquity?.[1] ? 
+    ratioData.debtEquity[1] - ratioData.debtEquity[0] : 0;
   
   const chartRatios = [
-    { name: 'Revenue Growth (%)', data: ratioData.revenueGrowth, unit: '%', color: 'bg-blue-500' },
-    { name: 'EBITDA Margin (%)', data: ratioData.ebitdaMargin, unit: '%', color: 'bg-green-500' },
-    { name: 'Net Margin (%)', data: ratioData.netMargin, unit: '%', color: 'bg-purple-500' },
-    { name: 'Return on Equity (%)', data: ratioData.roe, unit: '%', color: 'bg-orange-500' }
+    { name: 'Revenue Growth (%)', data: ratioData.revenueGrowth || [], unit: '%', color: 'bg-blue-500' },
+    { name: 'EBITDA Margin (%)', data: ratioData.ebitdaMargin || [], unit: '%', color: 'bg-green-500' },
+    { name: 'Net Margin (%)', data: ratioData.netMargin || [], unit: '%', color: 'bg-purple-500' },
+    { name: 'Return on Equity (%)', data: ratioData.roe || [], unit: '%', color: 'bg-orange-500' }
   ];
 
   return (
@@ -468,212 +515,285 @@ const AncillaryTab = ({ company }) => {
         gradient="from-teal-50 to-cyan-50"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <MetricCard 
-          title="Latest Revenue Growth"
-          value={`${ratioData.revenueGrowth[0].toFixed(1)}%`}
-          change={revenueGrowthTrend}
-          isPercentage={true}
-        />
-        <MetricCard 
-          title="Return on Equity"
-          value={`${ratioData.roe[0].toFixed(1)}%`}
-          change={roeTrend}
-          isPercentage={true}
-        />
-        <MetricCard 
-          title="Debt/Equity Ratio"
-          value={ratioData.debtEquity[0].toFixed(2)}
-          change={debtEquityTrend}
-        />
-      </div>
-
-      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-        <h4 className="text-lg font-semibold mb-6 text-gray-800">Profitability Analysis</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RatioCard 
-            title="Revenue Growth (%)"
-            data={ratioData.revenueGrowth}
-            years={years}
-            unit="%"
-            colorScheme="blue"
-            trend={revenueGrowthTrend}
+      {ratioData.revenueGrowth && ratioData.roe && ratioData.debtEquity && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <MetricCard 
+            title="Latest Revenue Growth"
+            value={`${(ratioData.revenueGrowth[0] || 0).toFixed(1)}%`}
+            change={revenueGrowthTrend}
+            isPercentage={true}
           />
-          <RatioCard 
-            title="EBITDA Margin (%)"
-            data={ratioData.ebitdaMargin}
-            years={years}
-            unit="%"
-            colorScheme="green"
+          <MetricCard 
+            title="Return on Equity"
+            value={`${(ratioData.roe[0] || 0).toFixed(1)}%`}
+            change={roeTrend}
+            isPercentage={true}
           />
-          <RatioCard 
-            title="Net Margin (%)"
-            data={ratioData.netMargin}
-            years={years}
-            unit="%"
-            colorScheme="purple"
-          />
-          <RatioCard 
-            title="Return on Equity (%)"
-            data={ratioData.roe}
-            years={years}
-            unit="%"
-            colorScheme="orange"
-            trend={roeTrend}
+          <MetricCard 
+            title="Debt/Equity Ratio"
+            value={(ratioData.debtEquity[0] || 0).toFixed(2)}
+            change={debtEquityTrend}
           />
         </div>
+      )}
+
+      {ratioData.revenueGrowth && ratioData.ebitdaMargin && ratioData.netMargin && ratioData.roe && (
+        <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+          <h4 className="text-lg font-semibold mb-6 text-gray-800">Profitability Analysis</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <RatioCard 
+              title="Revenue Growth (%)"
+              data={ratioData.revenueGrowth}
+              years={years}
+              unit="%"
+              colorScheme="blue"
+              trend={revenueGrowthTrend}
+            />
+            <RatioCard 
+              title="EBITDA Margin (%)"
+              data={ratioData.ebitdaMargin}
+              years={years}
+              unit="%"
+              colorScheme="green"
+            />
+            <RatioCard 
+              title="Net Margin (%)"
+              data={ratioData.netMargin}
+              years={years}
+              unit="%"
+              colorScheme="purple"
+            />
+            <RatioCard 
+              title="Return on Equity (%)"
+              data={ratioData.roe}
+              years={years}
+              unit="%"
+              colorScheme="orange"
+              trend={roeTrend}
+            />
+          </div>
+        </div>
+      )}
+
+      {years.length > 0 && (
+        <RatioChart 
+          title="Key Ratio Trends (5-Year)"
+          ratios={chartRatios}
+          years={years}
+        />
+      )}
+
+      {peerData.length > 0 && (
+        <PeerTable 
+          title="Peer Comparison by Revenue"
+          data={peerData}
+          className="mb-6"
+        />
+      )}
+
+      {company.ancillary.strengths && company.ancillary.improvements && (
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Insights</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {company.ancillary.strengths.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="font-medium text-gray-800 mb-2">Strengths</h5>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {company.ancillary.strengths.map((strength, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      {strength}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {company.ancillary.improvements.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="font-medium text-gray-800 mb-2">Areas for Improvement</h5>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {company.ancillary.improvements.map((item, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="inline-block w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const PressTab = ({ company }) => {
+  if (!company.press) {
+    return (
+      <div className="space-y-6">
+        <SectionHeader 
+          title="Press Coverage" 
+          subtitle="Recent news and media mentions about the company"
+          gradient="from-blue-50 to-indigo-50"
+        />
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <p className="text-gray-600">Press coverage data is not available for this company.</p>
+        </div>
       </div>
+    );
+  }
 
-      <RatioChart 
-        title="Key Ratio Trends (5-Year)"
-        ratios={chartRatios}
-        years={years}
+  return (
+    <div className="space-y-6">
+      <SectionHeader 
+        title="Press Coverage" 
+        subtitle="Recent news and media mentions about the company"
+        gradient="from-blue-50 to-indigo-50"
       />
 
-      <PeerTable 
-        title="Peer Comparison by Revenue"
-        data={peerData}
-        className="mb-6"
-      />
+      {company.press.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {company.press.map((item, index) => (
+            <PressCard
+              key={index}
+              title={item.title}
+              excerpt={item.excerpt}
+              date={item.date}
+              link={item.link}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <p className="text-gray-600">No press coverage available for this company.</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Insights</h4>
+const PriceTab = ({ company }) => {
+  if (!company.priceData) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">Price Information</h3>
+          <div className="bg-white rounded-lg p-6 shadow-sm">
+            <p className="text-gray-600">Price data is not available for this company.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">Price Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <h5 className="font-medium text-gray-800 mb-2">Strengths</h5>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {company.ancillary.strengths.map((strength, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  {strength}
-                </li>
-              ))}
-            </ul>
+          <div className="space-y-4">
+            <div className="flex justify-between">
+              <span className="text-gray-600">Current Price:</span>
+              <span className="font-bold text-xl">₹{company.price.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Day Change:</span>
+              <span className={`flex items-center gap-1 ${company.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                {company.change >= 0 ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
+                {Math.abs(company.change).toFixed(2)} ({Math.abs(company.changePercent).toFixed(2)}%)
+              </span>
+            </div>
           </div>
-          <div className="space-y-3">
-            <h5 className="font-medium text-gray-800 mb-2">Areas for Improvement</h5>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {company.ancillary.improvements.map((item, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className="inline-block w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
+          <div className="space-y-4">
+            <div className="flex justify-between">
+              <span className="text-gray-600">Market Cap:</span>
+              <span className="font-semibold">{company.priceData.marketCap || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Industry PE:</span>
+              <span className="font-semibold">{company.priceData.industryPE || 'N/A'}</span>
+            </div>
           </div>
         </div>
+        
+        {company.priceData.metrics && Object.keys(company.priceData.metrics).length > 0 && (
+          <div className="mt-8">
+            <p className="text-sm text-gray-500 mb-4">Data as per 2023-24</p>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {Object.entries(company.priceData.metrics).map(([key, value], idx) => (
+                <div key={idx} className="bg-white p-4 rounded-lg shadow">
+                  <p className="text-gray-500 text-sm">{key}</p>
+                  <p className="font-bold text-lg">{value}</p>
+                </div>
+              ))}
+            </div>
+            
+            <p className="text-xs text-gray-500 mt-4">*Data is as per last available financials, corporate actions in the interim period might not be reflected here.</p>
+          </div>
+        )}
+        
+        {company.priceData.corporateActions && company.priceData.corporateActions.length > 0 && (
+          <div className="mt-8">
+            <h4 className="text-lg font-semibold mb-4">Corporate Actions</h4>
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white rounded-lg overflow-hidden">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Financial Year</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Particulars</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Record Date</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Ratio/Rates/Amount</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {company.priceData.corporateActions.map((action, idx) => (
+                    <tr key={idx} className="border-b border-gray-200">
+                      <td className="px-4 py-3 text-sm">{action.fy}</td>
+                      <td className="px-4 py-3 text-sm">{action.type}</td>
+                      <td className="px-4 py-3 text-sm">{action.date}</td>
+                      <td className="px-4 py-3 text-sm">{action.amount}</td>
+                      <td className="px-4 py-3 text-sm">{action.remarks}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+        
+        {company.priceData.about && (
+          <div className="mt-8">
+            <h4 className="text-lg font-semibold mb-2">About the company</h4>
+            <p className="text-gray-700">
+              {company.priceData.about}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-const PressTab = ({ company }) => (
-  <div className="space-y-6">
-    <SectionHeader 
-      title="Press Coverage" 
-      subtitle="Recent news and media mentions about the company"
-      gradient="from-blue-50 to-indigo-50"
-    />
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {company.press.map((item, index) => (
-        <PressCard
-          key={index}
-          title={item.title}
-          excerpt={item.excerpt}
-          date={item.date}
-          link={item.link}
-        />
-      ))}
-    </div>
-  </div>
-);
-
-const PriceTab = ({ company }) => (
-  <div className="space-y-6">
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
-      <h3 className="text-2xl font-bold text-gray-800 mb-4">Price Information</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Current Price:</span>
-            <span className="font-bold text-xl">₹{company.price.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Day Change:</span>
-            <span className={`flex items-center gap-1 ${company.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              {company.change >= 0 ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
-              {Math.abs(company.change).toFixed(2)} ({Math.abs(company.changePercent).toFixed(2)}%)
-            </span>
-          </div>
-        </div>
-        <div className="space-y-4">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Market Cap:</span>
-            <span className="font-semibold">{company.priceData.marketCap}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Industry PE:</span>
-            <span className="font-semibold">{company.priceData.industryPE}</span>
-          </div>
-        </div>
-      </div>
-      
-      <div className="mt-8">
-        <p className="text-sm text-gray-500 mb-4">Data as per 2023-24</p>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {Object.entries(company.priceData.metrics).map(([key, value], idx) => (
-            <div key={idx} className="bg-white p-4 rounded-lg shadow">
-              <p className="text-gray-500 text-sm">{key}</p>
-              <p className="font-bold text-lg">{value}</p>
-            </div>
-          ))}
-        </div>
-        
-        <p className="text-xs text-gray-500 mt-4">*Data is as per last available financials, corporate actions in the interim period might not be reflected here.</p>
-      </div>
-      
-      <div className="mt-8">
-        <h4 className="text-lg font-semibold mb-4">Corporate Actions</h4>
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white rounded-lg overflow-hidden">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Financial Year</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Particulars</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Record Date</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Ratio/Rates/Amount</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Remarks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {company.priceData.corporateActions.map((action, idx) => (
-                <tr key={idx} className="border-b border-gray-200">
-                  <td className="px-4 py-3 text-sm">{action.fy}</td>
-                  <td className="px-4 py-3 text-sm">{action.type}</td>
-                  <td className="px-4 py-3 text-sm">{action.date}</td>
-                  <td className="px-4 py-3 text-sm">{action.amount}</td>
-                  <td className="px-4 py-3 text-sm">{action.remarks}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      
-      <div className="mt-8">
-        <h4 className="text-lg font-semibold mb-2">About the company</h4>
-        <p className="text-gray-700">
-          {company.priceData.about}
-        </p>
-      </div>
-    </div>
-  </div>
-);
-
 const BalanceSheetTab = ({ company }) => {
   const [activeBalanceSheetTab, setActiveBalanceSheetTab] = useState("standalone");
+
+  if (!company.balanceSheet) {
+    return (
+      <div className="space-y-6">
+        <SectionHeader 
+          title="Balance Sheet" 
+          subtitle="Detailed breakdown of assets and liabilities"
+          gradient="from-blue-50 to-indigo-50"
+        />
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <p className="text-gray-600">Balance sheet data is not available for this company.</p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-6">
@@ -700,61 +820,101 @@ const BalanceSheetTab = ({ company }) => {
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {activeBalanceSheetTab === 'standalone' ? (
-          <FinancialTable 
-            title="Standalone Balance Sheet (10 Years)"
-            data={company.balanceSheet.standalone}
-            years={company.balanceSheet.standaloneYears}
-          />
+          company.balanceSheet.standalone && company.balanceSheet.standaloneYears ? (
+            <FinancialTable 
+              title="Standalone Balance Sheet (10 Years)"
+              data={company.balanceSheet.standalone}
+              years={company.balanceSheet.standaloneYears}
+            />
+          ) : (
+            <div className="p-6 text-center text-gray-600">
+              Standalone balance sheet data is not available.
+            </div>
+          )
         ) : (
-          <FinancialTable 
-            title="Consolidated Balance Sheet (5 Years)"
-            data={company.balanceSheet.consolidated}
-            years={company.balanceSheet.consolidatedYears}
-          />
+          company.balanceSheet.consolidated && company.balanceSheet.consolidatedYears ? (
+            <FinancialTable 
+              title="Consolidated Balance Sheet (5 Years)"
+              data={company.balanceSheet.consolidated}
+              years={company.balanceSheet.consolidatedYears}
+            />
+          ) : (
+            <div className="p-6 text-center text-gray-600">
+              Consolidated balance sheet data is not available.
+            </div>
+          )
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h4 className="text-lg font-semibold mb-4 text-gray-800">Balance Sheet Insights</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <h5 className="font-medium text-gray-800 mb-2">Strengths</h5>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {company.balanceSheet.insights.strengths.map((strength, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  {strength}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="space-y-3">
-            <h5 className="font-medium text-gray-800 mb-2">Trends</h5>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {company.balanceSheet.insights.trends.map((trend, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  {trend}
-                </li>
-              ))}
-            </ul>
+      {company.balanceSheet.insights && (
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">Balance Sheet Insights</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {company.balanceSheet.insights.strengths && company.balanceSheet.insights.strengths.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="font-medium text-gray-800 mb-2">Strengths</h5>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {company.balanceSheet.insights.strengths.map((strength, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      {strength}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {company.balanceSheet.insights.trends && company.balanceSheet.insights.trends.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="font-medium text-gray-800 mb-2">Trends</h5>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {company.balanceSheet.insights.trends.map((trend, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      {trend}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
 const ProfitLossTab = ({ company }) => {
-  const standaloneYears = company.profitLoss.standaloneYears;
-  const consolidatedYears = company.profitLoss.consolidatedYears;
+  if (!company.profitLoss) {
+    return (
+      <div className="space-y-6">
+        <SectionHeader 
+          title="Profit & Loss Statement" 
+          subtitle="Comprehensive financial performance analysis (₹ in Crores)"
+          gradient="from-indigo-50 to-purple-50"
+        />
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <p className="text-gray-600">Profit & Loss data is not available for this company.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const standaloneYears = company.profitLoss.standaloneYears || [];
+  const consolidatedYears = company.profitLoss.consolidatedYears || [];
   
-  const revenueGrowthFY24 = ((company.profitLoss.standaloneData[0].values[0] - company.profitLoss.standaloneData[0].values[1]) / 
-                           company.profitLoss.standaloneData[0].values[1] * 100);
-  const patGrowthFY24 = ((company.profitLoss.standaloneData[11].values[0] - company.profitLoss.standaloneData[11].values[1]) / 
-                        company.profitLoss.standaloneData[11].values[1] * 100);
-  const ebitdaMarginFY24 = (company.profitLoss.standaloneData[2].values[0] / company.profitLoss.standaloneData[0].values[0] * 100);
-  const patMarginFY24 = (company.profitLoss.standaloneData[11].values[0] / company.profitLoss.standaloneData[0].values[0] * 100);
+  const revenueGrowthFY24 = company.profitLoss.standaloneData?.[0]?.values ? 
+    Number(((company.profitLoss.standaloneData[0].values[0] - company.profitLoss.standaloneData[0].values[1]) / 
+     company.profitLoss.standaloneData[0].values[1] * 100).toFixed(2)) : 0;
+  
+  const patGrowthFY24 = company.profitLoss.standaloneData?.[1]?.values ? 
+    Number(((company.profitLoss.standaloneData[1].values[0] - company.profitLoss.standaloneData[1].values[1]) / 
+     company.profitLoss.standaloneData[1].values[1] * 100).toFixed(2)) : 0;
+  
+  const ebitdaMarginFY24 = company.profitLoss.standaloneData?.[0]?.values && company.profitLoss.standaloneData?.[1]?.values ? 
+    Number((company.profitLoss.standaloneData[1].values[0] / company.profitLoss.standaloneData[0].values[0] * 100).toFixed(2)) : 0;
+  
+  const patMarginFY24 = company.profitLoss.standaloneData?.[0]?.values && company.profitLoss.standaloneData?.[1]?.values ? 
+    Number((company.profitLoss.standaloneData[1].values[0] / company.profitLoss.standaloneData[0].values[0] * 100).toFixed(2)) : 0;
 
   return (
     <div className="space-y-6">
@@ -801,41 +961,54 @@ const ProfitLossTab = ({ company }) => {
         className="mb-6"
       />
 
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Observations</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <h5 className="font-medium text-gray-800 mb-2">Growth Trends</h5>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {company.profitLoss.observations.growth.map((item, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className={`inline-block w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0 ${
-                    idx === 0 ? 'bg-green-500' : 
-                    idx === 1 ? 'bg-blue-500' : 
-                    'bg-purple-500'
-                  }`}></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="space-y-3">
-            <h5 className="font-medium text-gray-800 mb-2">Profitability Metrics</h5>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {company.profitLoss.observations.metrics.map((item, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className={`inline-block w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0 ${
-                    idx === 0 ? 'bg-emerald-500' : 
-                    idx === 1 ? 'bg-orange-500' : 
-                    'bg-red-500'
-                  }`}></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
+      {company.profitLoss.observations ? (
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Observations</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {company.profitLoss.observations.growth && company.profitLoss.observations.growth.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="font-medium text-gray-800 mb-2">Growth Trends</h5>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {company.profitLoss.observations.growth.map((item, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className={`inline-block w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0 ${
+                        idx === 0 ? 'bg-green-500' : 
+                        idx === 1 ? 'bg-blue-500' : 
+                        'bg-purple-500'
+                      }`}></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {company.profitLoss.observations.metrics && company.profitLoss.observations.metrics.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="font-medium text-gray-800 mb-2">Profitability Metrics</h5>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {company.profitLoss.observations.metrics.map((item, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className={`inline-block w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0 ${
+                        idx === 0 ? 'bg-emerald-500' : 
+                        idx === 1 ? 'bg-orange-500' : 
+                        'bg-red-500'
+                      }`}></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Observations</h4>
+          <div className="text-center text-gray-500 py-4">
+            Detailed financial observations are not available for this company.
+          </div>
+        </div>
+      )}
     </div>
   );
 };
