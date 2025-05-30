@@ -285,18 +285,6 @@ const PressCard = ({ title, excerpt, date, link }) => (
 );
 
 const CompanyCard = ({ company, onClick }) => {
-  const formatPrice = (price) => `₹${price.toFixed(2)}`;
-  
-  const formatChange = (change, changePercent) => {
-    const isPositive = change >= 0;
-    return (
-      <span className={`flex items-center gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-        {isPositive ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
-        {Math.abs(change).toFixed(2)} ({Math.abs(changePercent).toFixed(2)}%)
-      </span>
-    );
-  };
-
   return (
     <div 
       className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 border border-gray-100"
@@ -311,15 +299,9 @@ const CompanyCard = ({ company, onClick }) => {
           <ChevronRight className="text-gray-400" size={20} />
         </div>
         
-        <div className="flex justify-between items-end">
-          <div>
-            <p className="text-2xl font-bold text-gray-900 mb-1">{formatPrice(company.price)}</p>
-            {formatChange(company.change, company.changePercent)}
-          </div>
-          <div className="text-right">
-            <p className="text-sm text-gray-500">Market Cap</p>
-            <p className="font-semibold text-gray-700">{company.overview?.marketCap || 'N/A'}</p>
-          </div>
+        <div className="text-left">
+          <p className="text-sm text-gray-500">Market Cap</p>
+          <p className="font-semibold text-gray-700">{company.overview?.marketCap || 'N/A'}</p>
         </div>
         
         <div className="mt-4 pt-4 border-t border-gray-100">
