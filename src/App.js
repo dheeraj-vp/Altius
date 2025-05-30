@@ -65,11 +65,41 @@ const FinancialTable = ({ title, data, years, className = "" }) => (
 const RatioCard = ({ title, data, years, unit = "", colorScheme = "blue", trend = null }) => {
   const getColorClasses = (scheme) => {
     const colors = {
-      blue: { bg: 'bg-blue-50', border: 'border-blue-500', text: 'text-blue-800', header: 'bg-blue-100' },
-      green: { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-800', header: 'bg-green-100' },
-      purple: { bg: 'bg-purple-50', border: 'border-purple-500', text: 'text-purple-800', header: 'bg-purple-100' },
-      orange: { bg: 'bg-orange-50', border: 'border-orange-500', text: 'text-orange-800', header: 'bg-orange-100' },
-      red: { bg: 'bg-red-50', border: 'border-red-500', text: 'text-red-800', header: 'bg-red-100' }
+      blue: { 
+        bg: 'bg-blue-50', 
+        border: 'border-blue-500', 
+        text: 'text-blue-800', 
+        header: 'bg-blue-100',
+        accent: 'text-blue-600'
+      },
+      green: { 
+        bg: 'bg-green-50', 
+        border: 'border-green-500', 
+        text: 'text-green-800', 
+        header: 'bg-green-100',
+        accent: 'text-green-600'
+      },
+      purple: { 
+        bg: 'bg-purple-50', 
+        border: 'border-purple-500', 
+        text: 'text-purple-800', 
+        header: 'bg-purple-100',
+        accent: 'text-purple-600'
+      },
+      orange: { 
+        bg: 'bg-orange-50', 
+        border: 'border-orange-500', 
+        text: 'text-orange-800', 
+        header: 'bg-orange-100',
+        accent: 'text-orange-600'
+      },
+      red: { 
+        bg: 'bg-red-50', 
+        border: 'border-red-500', 
+        text: 'text-red-800', 
+        header: 'bg-red-100',
+        accent: 'text-red-600'
+      }
     };
     return colors[scheme] || colors.blue;
   };
@@ -77,24 +107,94 @@ const RatioCard = ({ title, data, years, unit = "", colorScheme = "blue", trend 
   const colors = getColorClasses(colorScheme);
   
   return (
-    <div className={`${colors.bg} rounded-lg p-4 border-l-4 ${colors.border}`}>
-      <div className="flex justify-between items-center mb-3">
-        <h5 className={`font-semibold ${colors.text}`}>{title}</h5>
-        {trend && (
-          <span className={`text-xs px-2 py-1 rounded-full ${colors.header} ${colors.text}`}>
-            {trend > 0 ? '↗' : trend < 0 ? '↘' : '→'} {trend !== 0 ? `${Math.abs(trend)}%` : 'Stable'}
+    <div className={`${colors.bg} rounded-xl p-5 border-l-4 ${colors.border} shadow-sm`}>
+      <div className="flex justify-between items-center mb-4">
+        <h5 className={`font-semibold text-lg ${colors.text}`}>{title}</h5>
+        {trend !== null && (
+          <span className={`text-xs px-3 py-1 rounded-full ${colors.header} ${colors.text} font-medium`}>
+            {trend > 0 ? '↗' : trend < 0 ? '↘' : '→'} 
+            {trend !== 0 ? ` ${Math.abs(trend)}%` : ' Stable'}
           </span>
         )}
       </div>
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-5 gap-3">
         {years.map((year, index) => (
           <div key={year} className="text-center">
-            <div className="text-xs text-gray-600 mb-1">{year.replace('31-Mar-', '')}</div>
-            <div className={`text-sm font-medium ${colors.text}`}>
-              {data[index]}{unit}
+            <div className="text-xs text-gray-500 mb-2 font-medium">
+              {year.toString().replace('31-Mar-', '\'').replace('20', '')}
+            </div>
+            <div className={`text-base font-semibold ${colors.accent} bg-white rounded-lg py-2 px-1 shadow-sm`}>
+              {data[index] !== undefined ? data[index] : 'N/A'}{unit}
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+};
+
+const RatioChart = ({ title, ratios, years }) => {
+  if (!ratios || !years || ratios.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <h4 className="text-xl font-semibold mb-6 text-gray-900">{title}</h4>
+        <div className="text-center text-gray-500 py-8">No data available</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+      <h4 className="text-xl font-semibold mb-6 text-gray-900">{title}</h4>
+      <div className="space-y-8">
+        {ratios.map((ratio, index) => {
+          if (!ratio.data || ratio.data.length === 0) return null;
+          
+          const validData = ratio.data.filter(val => val !== null && val !== undefined && !isNaN(val));
+          const maxValue = Math.max(...validData, 1);
+          const latestValue = ratio.data[ratio.data.length - 1];
+          
+          return (
+            <div key={index} className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-base font-semibold text-gray-800">{ratio.name}</span>
+                <span className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
+                  {latestValue !== undefined ? `${latestValue}${ratio.unit || ''}` : 'N/A'}
+                  <span className="text-xs ml-1 text-gray-500">(Latest)</span>
+                </span>
+              </div>
+              <div className="relative">
+                <div className="flex items-end justify-between space-x-2 h-28 px-3 py-2 bg-gray-50 rounded-lg">
+                  {ratio.data.map((value, idx) => {
+                    const height = value && !isNaN(value) ? (value / maxValue) * 100 : 0;
+                    const colorClass = ratio.color || 'bg-blue-500';
+                    
+                    return (
+                      <div key={idx} className="flex-1 flex flex-col items-center group relative min-w-0">
+                        <div className="relative w-full flex justify-center">
+                          <div
+                            className={`w-6 ${colorClass} rounded-t-md transition-all duration-300 hover:opacity-80 cursor-pointer`}
+                            style={{
+                              height: `${Math.max(height, 4)}%`,
+                              minHeight: '4px',
+                            }}
+                            title={`${years[idx]?.toString().replace('31-Mar-', '') || idx}: ${value || 'N/A'}${ratio.unit || ''}`}
+                          />
+                        </div>
+                        <div className="text-xs text-gray-500 mt-2 text-center font-medium">
+                          {years[idx]?.toString().replace('31-Mar-', '\'').replace('20', '') || idx}
+                        </div>
+                        <div className="text-xs text-gray-600 font-medium">
+                          {value !== undefined && value !== null ? `${value}${ratio.unit || ''}` : 'N/A'}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -137,43 +237,6 @@ const PeerTable = ({ title, data, className = "" }) => (
   </div>
 );
 
-const RatioChart = ({ title, ratios, years }) => (
-  <div className="bg-white rounded-2xl p-6 shadow-md">
-    <h4 className="text-xl font-semibold mb-6 text-gray-900">{title}</h4>
-    <div className="space-y-6">
-      {ratios.map((ratio, index) => {
-        const maxValue = Math.max(...ratio.data);
-        return (
-          <div key={index} className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-base font-medium text-gray-800">{ratio.name}</span>
-              <span className="text-sm text-gray-500">
-                {ratio.data[0]}{ratio.unit} <span className="text-xs">(Latest)</span>
-              </span>
-            </div>
-            <div className="flex items-end space-x-3 h-24 px-2 bg-gray-50 rounded-lg overflow-hidden">
-              {ratio.data.map((value, idx) => (
-                <div key={idx} className="flex-1 flex flex-col items-center group relative">
-                  <div
-                    className={`w-4 ${ratio.color} rounded-md transition-all duration-300 group-hover:opacity-80`}
-                    style={{
-                      height: `${(value / maxValue) * 100}%`,
-                      minHeight: '6px',
-                    }}
-                    title={`${years[idx].replace('31-Mar-', '')}: ${value}${ratio.unit}`}
-                  />
-                  <div className="text-[10px] text-gray-500 mt-1">
-                    {years[idx].replace('31-Mar-', '')}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </div>
-);
 
 const PressCard = ({ title, excerpt, date, link }) => (
   <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow duration-200">
