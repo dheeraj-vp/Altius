@@ -553,7 +553,7 @@ balanceSheet: {
     { label: 'Capital WIP', values: [1.99, 18.74, 45.94, 122.05, 38.67, 46.82, 25.77, 42.59, 101.59] },
     { label: 'Other NCA', values: [14168.19, 11974.49, 6844.30, 5320.54, 4577.08, 4261.41, 4227.87, 4310.77, 3923.07] },
     { label: 'CA', values: [19607.76, 14164.07, 12932.98, 10274.35, 6703.62, 4210.96, 3488.56, 2908.70, 3548.79] },
-    { label: 'Total Assets', values: [33775.95, 27220.96, 20819.19, 16721.68, 12092.20, 9120.64, 8297.52],isHighlight: true  } // only 7 values provided
+    { label: 'Total Assets', values: [33775.95, 27220.96, 20819.19, 16721.68, 12092.20, 9120.64, 8297.52, 7800.91, 8083.34],isHighlight: true  } // only 7 values provided
   ],
   consolidatedYears: ['FY25', 'FY24', 'FY23', 'FY22', 'FY21', 'FY20', 'FY19', 'FY18', 'FY17'],
   consolidated: [
