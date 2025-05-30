@@ -488,7 +488,7 @@ const InsightsTab = ({ company }) => {
           <FinancialTable 
             title="Peer Comparison (₹ in Crores)"
             data={company.insights.peerComparison}
-            years={['Particulars', 'Mohan Meakin Ltd', 'Tilaknagar Industries', 'Som Distilleries', 'Radico Khaitan']}
+            years={[ 'Revenue', 'PAT', 'CMP', 'MCAP','P/E','P/S','EBITDA']}
             className="mb-6"
           />
         )}

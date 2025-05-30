@@ -94,35 +94,23 @@ export const companiesData = {
         ]
       },
       peerComparison: [
-        { 
-          label: "Revenue", 
-          values: ["Mohan Meakin Ltd", 1942, "Tilaknagar Industries", 2972, "Som Distilleries", 1286, "Radico Khaitan", 15493] 
-        },
-        { 
-          label: "PAT", 
-          values: ["Mohan Meakin Ltd", 85, "Tilaknagar Industries", 138, "Som Distilleries", 85, "Radico Khaitan", 256] 
-        },
-        { 
-          label: "CMP (₹)", 
-          values: ["Mohan Meakin Ltd", 1966, "Tilaknagar Industries", 210.50, "Som Distilleries", 105, "Radico Khaitan", 1728] 
-        },
-        { 
-          label: "MCAP", 
-          values: ["Mohan Meakin Ltd", 1672.77, "Tilaknagar Industries", 4056.97, "Som Distilleries", 2049.33, "Radico Khaitan", 23103.36] 
-        },
-        { 
-          label: "P/E", 
-          values: ["Mohan Meakin Ltd", 19.75, "Tilaknagar Industries", 29.5, "Som Distilleries", 9.4, "Radico Khaitan", 90.33] 
-        },
-        { 
-          label: "P/S", 
-          values: ["Mohan Meakin Ltd", 0.95, "Tilaknagar Industries", 1.36, "Som Distilleries", 1.6, "Radico Khaitan", 1.5] 
-        },
-        { 
-          label: "EBITDA", 
-          values: ["Mohan Meakin Ltd", 111, "Tilaknagar Industries", 197, "Som Distilleries", 155, "Radico Khaitan", 515] 
-        }
-      ]
+  { 
+    label: "Mohan Meakin Ltd", 
+    values: [1942,85,1966,1672.77,19.75,0.95,111] 
+  },
+  { 
+    label: "Tilaknagar Industries Ltd", 
+    values: [2972,138,210.50,4056.97,29.5,1.36,197] 
+  },
+  { 
+    label: "Som Distilleries Ltd", 
+    values: [1286,85,105,2049.33,9.4,1.6,155] 
+  },
+  { 
+    label: "Radico Khaitan Ltd", 
+    values: [15493,256,1728,23103.36,90.33,1.5,515] 
+  }
+]
     },
     ancillary: {
       years: ['31-Mar-2020', '31-Mar-2019', '31-Mar-2018', '31-Mar-2017', '31-Mar-2016'],
@@ -394,20 +382,12 @@ balanceSheet: {
       },
       peerComparison: [
         { 
-          label: "Revenue (₹ Cr)", 
-          values: ["NSE", 4848.29, "CNB FINWIZ", 410.25, "BSE", 378.63, "MCX", 370.44] 
+          label: "NSE", 
+          values: ["4950","2567","4500","222750","29","17","3106"] 
         },
         { 
-          label: "Market Cap (₹ Cr)", 
-          values: ["NSE", 569250, "BSE", 36575, "MCX", "N/A", "Others", "N/A"] 
-        },
-        { 
-          label: "P/E Ratio", 
-          values: ["NSE", 68.55, "BSE", 48, "Industry Average", 82, "CME (US)", 14] 
-        },
-        { 
-          label: "Market Share", 
-          values: ["NSE Cash", "93%", "NSE F&O", "99%", "BSE Cash", "7%", "BSE F&O", "1%"] 
+          label: "BSE", 
+          values: ["-","-","2700","36575","48","40","-"] 
         }
       ]
     },
