@@ -49,7 +49,7 @@ export const companiesData = {
         { product: "Other Products", percentage: 12 }
       ],
       financials: [
-        { label: "Revenue", values: [1942, 1781, 1379], isHighlight: true },
+        { label: "Revenue", values: [1942, 1781, 1379]},
         { label: "EBITDA", values: [111, 88, 68] },
         { label: "PBT", values: [114, 91, 69] },
         { label: "PAT", values: [85, 68, 51] },
@@ -58,8 +58,7 @@ export const companiesData = {
       quarterlyFinancials: [
         { 
           label: "Revenue from Operations", 
-          values: [820.40, 674.18, 1540.07, 1330.87], 
-          isHighlight: true 
+          values: [820.40, 674.18, 1540.07, 1330.87]
         },
         { 
           label: "Total Income", 
@@ -265,7 +264,7 @@ balanceSheet: {
     profitLoss: {
   standaloneYears: ['FY24', 'FY23', 'FY22', 'FY21', 'FY20', 'FY19', 'FY18', 'FY17', 'FY16', 'FY15'],
   standaloneData: [
-    { label: 'Net Revenue', values: [1929.92, 1771.21, 1370.42, 1099.01, 1020.94, 947.94, 655.77, 580.97, 442.94, 409.51], isHighlight: true },
+    { label: 'Net Revenue', values: [1929.92, 1771.21, 1370.42, 1099.01, 1020.94, 947.94, 655.77, 580.97, 442.94, 409.51] },
     { label: 'Total Op Cost', values: [1818.67, 1681.95, 1302.80, 1042.60, 978.24, 897.26, 637.24, 566.70, 432.70, 404.01] },
     { label: 'EBITDA', values: [111.25, 89.26, 67.62, 56.41, 42.70, 50.68, 18.53, 14.28, 10.23, 5.50] },
     { label: 'Other Income', values: [11.85, 7.37, 8.96, 2.86, 6.84, 6.19, 4.59, 4.50, 8.98, 6.13] },
@@ -277,11 +276,11 @@ balanceSheet: {
     { label: 'Profit (Continuing Ops)', values: [113.94, 91.80, 68.98, 54.15, 42.10, 51.32, 22.08, 6.77, 5.21, 5.86] },
     { label: 'Income Tax', values: [29.24, 23.40, 17.52, 13.84, 15.69, 16.38, 6.54, 1.98, 1.47, 2.10] },
     { label: 'PAT from Continuing Operations', values: [84.70, 68.40, 51.45, 40.31, 26.41, 34.94, 15.54, 4.79, 3.74, 3.76] },
-    { label: 'PAT', values: [84.70, 68.40, 51.45, 40.31, 26.41, 34.94, 15.54, 4.79, 3.74, 3.76], isHighlight: true }
+    { label: 'PAT', values: [84.70, 68.40, 51.45, 40.31, 26.41, 34.94, 15.54, 4.79, 3.74, 3.76]}
   ],
   consolidatedYears: ['FY20', 'FY19', 'FY18', 'FY17', 'FY16'],
   consolidatedData: [
-    { label: 'Net Revenue', values: [1020.94, 947.94, 655.77, 580.97, 442.94], isHighlight: true },
+    { label: 'Net Revenue', values: [1020.94, 947.94, 655.77, 580.97, 442.94]},
     { label: 'Total Op Cost', values: [978.24, 897.26, 637.24, 566.70, 432.70] },
     { label: 'EBITDA', values: [42.70, 50.68, 18.53, 14.28, 10.23] },
     { label: 'Other Income', values: [6.84, 6.19, 4.59, 4.50, 8.98] },
@@ -294,7 +293,7 @@ balanceSheet: {
     { label: 'Income Tax', values: [15.69, 16.38, 6.54, 1.98, 1.47] },
     { label: 'PAT from Continuing Operations', values: [26.41, 33.34, 15.54, 4.79, 3.74] },
     { label: 'Minority interest, JV, associates', values: [0.00, -0.19, -0.21, -0.14, -0.18] },
-    { label: 'PAT', values: [26.40, 33.15, 15.33, 4.64, 3.55], isHighlight: true }
+    { label: 'PAT', values: [26.40, 33.15, 15.33, 4.64, 3.55] }
   ],
   observations: {
     growth: [
@@ -357,7 +356,7 @@ balanceSheet: {
         { product: "Other Services", percentage: 8 }
       ],
       financials: [
-        { label: "Revenue", values: [17140.68, 14780.01, 11856.23], isHighlight: true },
+        { label: "Revenue", values: [17140.68, 14780.01, 11856.23] },
         { label: "EBITDA", values: [12880.98, 11610.62, 9631.46] },
         { label: "PBT", values: [14370.54, 12824.71, 10156.53] },
         { label: "PAT", values: [12187.69, 8305.40, 7501.88] },
@@ -366,8 +365,7 @@ balanceSheet: {
       quarterlyFinancials: [
         { 
           label: "Total Income", 
-          values: [4807, 5023, 3974, 4950], 
-          isHighlight: true 
+          values: [4807, 5023, 3974, 4950]
         },
         { 
           label: "Operating EBITDA", 
@@ -559,7 +557,7 @@ balanceSheet: {
 profitLoss: {
   standaloneYears: ['FY25', 'FY24', 'FY23', 'FY22', 'FY21', 'FY20', 'FY19', 'FY18', 'FY17'],
   standaloneData: [
-    { label: 'Net Revenue', values: [15433.00, 13510.54, 11181.03, 7762.80, 4848.29, 2832.43, 2450.44, 2132.72, 1690.50], isHighlight: true },
+    { label: 'Net Revenue', values: [15433.00, 13510.54, 11181.03, 7762.80, 4848.29, 2832.43, 2450.44, 2132.72, 1690.50]},
     { label: 'Total Op Cost', values: [4955.80, 4058.89, 2734.10, 2021.06, 1264.39, 980.73, 867.31, 771.31, 783.79] },
     { label: 'EBITDA', values: [10477.20, 9451.65, 8446.93, 5741.74, 3583.90, 1851.70, 1583.13, 1361.41, 906.71] },
     { label: 'Other Income', values: [4390.26, 1448.95, 1511.16, 621.80, 679.84, 335.38, 578.31, 459.51, 627.91] },
@@ -571,11 +569,11 @@ profitLoss: {
     { label: 'Income Tax', values: [2960.61, 2185.33, 2219.53, 1482.71, 488.26, 494.22, 653.50, 544.41, 389.99] },
     { label: 'PAT from Continuing Operations', values: [11245.67, 6635.31, 7232.90, 4621.11, 1787.28, 1560.46, 1389.87, 1161.81, 1032.93] },
     { label: 'Minority interest, JV, associates', values: [35.30, 10.06, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00] },
-    { label: 'PAT', values: [11280.97, 6645.37, 7232.90, 4621.11, 1787.28, 1560.46, 1389.87, 1161.81, 1032.93], isHighlight: true }
+    { label: 'PAT', values: [11280.97, 6645.37, 7232.90, 4621.11, 1787.28, 1560.46, 1389.87, 1161.81, 1032.93]}
   ],
   consolidatedYears: ['FY25', 'FY24', 'FY23', 'FY22', 'FY21', 'FY20', 'FY19', 'FY18', 'FY17'],
   consolidatedData: [
-    { label: 'Net Revenue', values: [17140.68, 14780.01, 11856.23, 8929.48, 5624.82, 3507.93, 2997.42, 2609.14, 2104.26], isHighlight: true },
+    { label: 'Net Revenue', values: [17140.68, 14780.01, 11856.23, 8929.48, 5624.82, 3507.93, 2997.42, 2609.14, 2104.26]},
     { label: 'Total Op Cost', values: [4259.70, 3169.39, 2224.77, 2430.22, 1484.14, 1241.98, 1073.11, 832.27, 899.55] },
     { label: 'EBITDA', values: [12880.98, 11610.62, 9631.46, 6499.26, 4140.68, 2265.95, 1924.31, 1776.87, 1204.71] },
     { label: 'Other Income', values: [2036.15, 1653.60, 909.13, 570.16, 639.59, 327.51, 686.89, 423.42, 576.40] },
@@ -587,7 +585,7 @@ profitLoss: {
     { label: 'Income Tax', values: [3869.03, 2777.80, 2539.70, 1714.00, 891.55, 640.47, 868.17, 735.57, 555.82] },
     { label: 'PAT from Continuing Operations', values: [11605.75, 8405.94, 7413.38, 5108.01, 3507.52, 1772.21, 1601.01, 1339.13, 1107.15] },
     { label: 'Minority interest, JV, associates', values: [581.94, -100.54, 88.50, 90.28, 66.20, 112.31, 107.03, 122.34, 111.67] },
-    { label: 'PAT', values: [12187.69, 8305.40, 7501.88, 5198.29, 3573.72, 1884.52, 1708.04, 1461.47, 1218.82], isHighlight: true }
+    { label: 'PAT', values: [12187.69, 8305.40, 7501.88, 5198.29, 3573.72, 1884.52, 1708.04, 1461.47, 1218.82]}
   ]
 }
 
@@ -666,7 +664,7 @@ balanceSheet: {
 profitLoss: {
   standaloneYears: ['FY24', 'FY23', 'FY22', 'FY21', 'FY20', 'FY19', 'FY18', 'FY17', 'FY16', 'FY15'],
   standaloneData: [
-    { label: 'Net Revenue', values: [1929.92, 863.75, 487.92, 1099.01, 1020.94, 947.94, 655.77, 580.97, 442.94, 409.51], isHighlight: true },
+    { label: 'Net Revenue', values: [1929.92, 863.75, 487.92, 1099.01, 1020.94, 947.94, 655.77, 580.97, 442.94, 409.51]},
     { label: 'Total Op Cost', values: [null, 258.21, 242.82] },
     { label: 'EBITDA', values: [null, 605.54, 245.10] },
     { label: 'Other Income', values: [null, 12.78, 33.30] },
@@ -678,11 +676,11 @@ profitLoss: {
     { label: 'Profit (Continuing Ops)', values: [null, 207.02, 48.17] },
     { label: 'Income Tax', values: [null, 86.24, 12.05] },
     { label: 'PAT from Continuing Operations', values: [null, 120.78, 36.12] },
-    { label: 'PAT', values: [84.70, 120.78, 36.12, 40.31, 26.41, 34.94, 15.54, 4.79, 3.74, 3.76], isHighlight: true }
+    { label: 'PAT', values: [84.70, 120.78, 36.12, 40.31, 26.41, 34.94, 15.54, 4.79, 3.74, 3.76]}
   ],
   consolidatedYears: ['FY23', 'FY22', 'FY20', 'FY19', 'FY18', 'FY17', 'FY16'],
   consolidatedData: [
-    { label: 'Net Revenue', values: [864.58, 488.03, 1020.94, 947.94, 655.77, 580.97, 442.94], isHighlight: true },
+    { label: 'Net Revenue', values: [864.58, 488.03, 1020.94, 947.94, 655.77, 580.97, 442.94]},
     { label: 'Total Op Cost', values: [264.86, 246.46] },
     { label: 'EBITDA', values: [599.72, 241.57] },
     { label: 'Other Income', values: [12.88, 36.24] },
@@ -695,7 +693,7 @@ profitLoss: {
     { label: 'Income Tax', values: [82.25, 11.03] },
     { label: 'PAT from Continuing Operations', values: [121.03, 35.03] },
     { label: 'Minority interest, JV, associates', values: [-0.10, -4.21] },
-    { label: 'PAT', values: [120.93, 30.82, 26.40, 33.15, 15.33, 4.64, 3.55], isHighlight: true }
+    { label: 'PAT', values: [120.93, 30.82, 26.40, 33.15, 15.33, 4.64, 3.55] }
   ],
   observations: {
     growth: [
