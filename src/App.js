@@ -903,18 +903,18 @@ const ProfitLossTab = ({ company }) => {
   const consolidatedYears = company.profitLoss.consolidatedYears || [];
   
   const revenueGrowthFY24 = company.profitLoss.standaloneData?.[0]?.values ? 
-    ((company.profitLoss.standaloneData[0].values[0] - company.profitLoss.standaloneData[0].values[1]) / 
-     company.profitLoss.standaloneData[0].values[1] * 100) : 0;
+    Number(((company.profitLoss.standaloneData[0].values[0] - company.profitLoss.standaloneData[0].values[1]) / 
+     company.profitLoss.standaloneData[0].values[1] * 100).toFixed(2)) : 0;
   
   const patGrowthFY24 = company.profitLoss.standaloneData?.[1]?.values ? 
-    ((company.profitLoss.standaloneData[1].values[0] - company.profitLoss.standaloneData[1].values[1]) / 
-     company.profitLoss.standaloneData[1].values[1] * 100) : 0;
+    Number(((company.profitLoss.standaloneData[1].values[0] - company.profitLoss.standaloneData[1].values[1]) / 
+     company.profitLoss.standaloneData[1].values[1] * 100).toFixed(2)) : 0;
   
   const ebitdaMarginFY24 = company.profitLoss.standaloneData?.[0]?.values && company.profitLoss.standaloneData?.[1]?.values ? 
-    (company.profitLoss.standaloneData[1].values[0] / company.profitLoss.standaloneData[0].values[0] * 100) : 0;
+    Number((company.profitLoss.standaloneData[1].values[0] / company.profitLoss.standaloneData[0].values[0] * 100).toFixed(2)) : 0;
   
   const patMarginFY24 = company.profitLoss.standaloneData?.[0]?.values && company.profitLoss.standaloneData?.[1]?.values ? 
-    (company.profitLoss.standaloneData[1].values[0] / company.profitLoss.standaloneData[0].values[0] * 100) : 0;
+    Number((company.profitLoss.standaloneData[1].values[0] / company.profitLoss.standaloneData[0].values[0] * 100).toFixed(2)) : 0;
 
   return (
     <div className="space-y-6">
@@ -961,41 +961,54 @@ const ProfitLossTab = ({ company }) => {
         className="mb-6"
       />
 
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Observations</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <h5 className="font-medium text-gray-800 mb-2">Growth Trends</h5>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {company.profitLoss.observations.growth.map((item, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className={`inline-block w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0 ${
-                    idx === 0 ? 'bg-green-500' : 
-                    idx === 1 ? 'bg-blue-500' : 
-                    'bg-purple-500'
-                  }`}></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="space-y-3">
-            <h5 className="font-medium text-gray-800 mb-2">Profitability Metrics</h5>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {company.profitLoss.observations.metrics.map((item, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className={`inline-block w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0 ${
-                    idx === 0 ? 'bg-emerald-500' : 
-                    idx === 1 ? 'bg-orange-500' : 
-                    'bg-red-500'
-                  }`}></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
+      {company.profitLoss.observations ? (
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Observations</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {company.profitLoss.observations.growth && company.profitLoss.observations.growth.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="font-medium text-gray-800 mb-2">Growth Trends</h5>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {company.profitLoss.observations.growth.map((item, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className={`inline-block w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0 ${
+                        idx === 0 ? 'bg-green-500' : 
+                        idx === 1 ? 'bg-blue-500' : 
+                        'bg-purple-500'
+                      }`}></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {company.profitLoss.observations.metrics && company.profitLoss.observations.metrics.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="font-medium text-gray-800 mb-2">Profitability Metrics</h5>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {company.profitLoss.observations.metrics.map((item, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className={`inline-block w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0 ${
+                        idx === 0 ? 'bg-emerald-500' : 
+                        idx === 1 ? 'bg-orange-500' : 
+                        'bg-red-500'
+                      }`}></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">Key Financial Observations</h4>
+          <div className="text-center text-gray-500 py-4">
+            Detailed financial observations are not available for this company.
+          </div>
+        </div>
+      )}
     </div>
   );
 };
