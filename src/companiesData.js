@@ -182,7 +182,17 @@ export const companiesData = {
         link: "#"
       }
     ],
-    priceData: {
+  shareholders: [
+    {
+      "name": "VINAY MOHAN",
+      "holdings_percentage": 8.21
+    },
+    {
+      "name": "Other",
+      "holdings_percentage": 91.79
+    }
+  ],
+priceData: {
       marketCap: "₹1,871.01 Cr",
       industryPE: 70,
       metrics: {
