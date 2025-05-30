@@ -518,13 +518,13 @@ const AncillaryTab = ({ company }) => {
   const peerData = company.ancillary.peerData || [];
   
   const revenueGrowthTrend = ratioData.revenueGrowth?.[0] && ratioData.revenueGrowth?.[1] ? 
-    ratioData.revenueGrowth[0] - ratioData.revenueGrowth[1] : 0;
+    Number((ratioData.revenueGrowth[0] - ratioData.revenueGrowth[1]).toFixed(2)) : 0;
   
   const roeTrend = ratioData.roe?.[0] && ratioData.roe?.[1] ? 
-    ratioData.roe[0] - ratioData.roe[1] : 0;
+    Number((ratioData.roe[0] - ratioData.roe[1]).toFixed(2)) : 0;
   
   const debtEquityTrend = ratioData.debtEquity?.[0] && ratioData.debtEquity?.[1] ? 
-    ratioData.debtEquity[1] - ratioData.debtEquity[0] : 0;
+    Number((ratioData.debtEquity[1] - ratioData.debtEquity[0]).toFixed(2)) : 0;
   
   const chartRatios = [
     { name: 'Revenue Growth (%)', data: ratioData.revenueGrowth || [], unit: '%', color: 'bg-blue-500' },
@@ -545,13 +545,13 @@ const AncillaryTab = ({ company }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <MetricCard 
             title="Latest Revenue Growth"
-            value={`${(ratioData.revenueGrowth[0] || 0).toFixed(1)}%`}
+            value={`${(ratioData.revenueGrowth[0] || 0).toFixed(2)}%`}
             change={revenueGrowthTrend}
             isPercentage={true}
           />
           <MetricCard 
             title="Return on Equity"
-            value={`${(ratioData.roe[0] || 0).toFixed(1)}%`}
+            value={`${(ratioData.roe[0] || 0).toFixed(2)}%`}
             change={roeTrend}
             isPercentage={true}
           />
