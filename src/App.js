@@ -1162,7 +1162,8 @@ const App = () => {
           <p className="text-gray-600">© 2025 CalQuity Research. Advanced stock analysis platform.</p>
         </div>
       </footer>
-
+      
+      
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
