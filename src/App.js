@@ -118,79 +118,21 @@ const RatioCard = ({ title, data, years, unit = "", colorScheme = "blue", trend 
         )}
       </div>
       <div className="grid grid-cols-5 gap-3">
-        {years.map((year, index) => (
-          <div key={year} className="text-center">
-            <div className="text-xs text-gray-500 mb-2 font-medium">
-              {year.toString().replace('31-Mar-', '\'').replace('20', '')}
-            </div>
-            <div className={`text-base font-semibold ${colors.accent} bg-white rounded-lg py-2 px-1 shadow-sm`}>
-              {data[index] !== undefined ? data[index] : 'N/A'}{unit}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const RatioChart = ({ title, ratios, years }) => {
-  if (!ratios || !years || ratios.length === 0) {
-    return (
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h4 className="text-xl font-semibold mb-6 text-gray-900">{title}</h4>
-        <div className="text-center text-gray-500 py-8">No data available</div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-      <h4 className="text-xl font-semibold mb-6 text-gray-900">{title}</h4>
-      <div className="space-y-8">
-        {ratios.map((ratio, index) => {
-          if (!ratio.data || ratio.data.length === 0) return null;
-          
-          const validData = ratio.data.filter(val => val !== null && val !== undefined && !isNaN(val));
-          const maxValue = Math.max(...validData, 1);
-          const latestValue = ratio.data[ratio.data.length - 1];
+        {years.map((year, index) => {
+          const containerHeight = 140; // px
+          const barHeight = data[index] > 0
+            ? Math.max((data[index] / Math.max(...data, 1)) * containerHeight, 8)
+            : data[index] < 0
+              ? 8
+              : 0;
           
           return (
-            <div key={index} className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-base font-semibold text-gray-800">{ratio.name}</span>
-                <span className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
-                  {latestValue !== undefined ? `${latestValue}${ratio.unit || ''}` : 'N/A'}
-                  <span className="text-xs ml-1 text-gray-500">(Latest)</span>
-                </span>
+            <div key={year} className="text-center">
+              <div className="text-xs text-gray-500 mb-2 font-medium">
+                {year.toString().replace('31-Mar-', '\'').replace('20', '')}
               </div>
-              <div className="relative">
-                <div className="flex items-end justify-between space-x-2 h-28 px-3 py-2 bg-gray-50 rounded-lg">
-                  {ratio.data.map((value, idx) => {
-                    const height = value && !isNaN(value) ? (value / maxValue) * 100 : 0;
-                    const colorClass = ratio.color || 'bg-blue-500';
-                    
-                    return (
-                      <div key={idx} className="flex-1 flex flex-col items-center group relative min-w-0">
-                        <div className="relative w-full flex justify-center">
-                          <div
-                            className={`w-6 ${colorClass} rounded-t-md transition-all duration-300 hover:opacity-80 cursor-pointer`}
-                            style={{
-                              height: `${Math.max(height, 4)}%`,
-                              minHeight: '4px',
-                            }}
-                            title={`${years[idx]?.toString().replace('31-Mar-', '') || idx}: ${value || 'N/A'}${ratio.unit || ''}`}
-                          />
-                        </div>
-                        <div className="text-xs text-gray-500 mt-2 text-center font-medium">
-                          {years[idx]?.toString().replace('31-Mar-', '\'').replace('20', '') || idx}
-                        </div>
-                        <div className="text-xs text-gray-600 font-medium">
-                          {value !== undefined && value !== null ? `${value}${ratio.unit || ''}` : 'N/A'}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+              <div className={`text-base font-semibold ${colors.accent} bg-white rounded-lg py-2 px-1 shadow-sm`}>
+                {data[index] !== undefined ? data[index] : 'N/A'}{unit}
               </div>
             </div>
           );
@@ -199,6 +141,90 @@ const RatioChart = ({ title, ratios, years }) => {
     </div>
   );
 };
+
+const RatioChart = ({ title, ratios, years }) => {
+    if (!ratios || !years || ratios.length === 0) {
+      return (
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <h4 className="text-xl font-semibold mb-6 text-gray-900">{title}</h4>
+          <div className="text-center text-gray-500 py-8">No data available</div>
+        </div>
+      );
+    }
+  
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <h4 className="text-xl font-semibold mb-6 text-gray-900">{title}</h4>
+        <div className="space-y-8">
+          {ratios.map((ratio, index) => {
+            if (!ratio.data || ratio.data.length === 0) return null;
+            
+            // Use parseFloat to correctly parse numbers, handling potential "%" suffixes
+            const numericData = ratio.data.map(val => parseFloat(String(val)) || 0);
+            
+            const validData = numericData.filter(val => val !== null && val !== undefined && !isNaN(val));
+            const maxValue = Math.max(...validData, 1); // Ensure maxValue is at least 1 to prevent division by zero
+            const latestValue = numericData.length > 0 ? numericData[numericData.length - 1] : 0;
+            
+            return (
+              <div key={index} className="space-y-3 mb-4">
+                <div className="flex justify-between items-center mb-8">
+                  <span className="text-base font-semibold text-gray-800">{ratio.name}</span>
+                  <span className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
+                    {latestValue !== undefined ? `${latestValue}${ratio.unit || ''}` : 'N/A'}
+                    <span className="text-xs ml-1 text-gray-500">(Latest)</span>
+                  </span>
+                </div>
+                <div className="relative">
+                  <div className="flex items-end justify-between space-x-2 h-40 px-3 py-2 bg-gray-50 rounded-lg">
+                    {numericData.map((value, idx) => {
+                      // Calculate height in pixels based on the container height (160px = h-40)
+                      const containerHeight = 140; // Accounting for padding
+                      let barHeight = 0;
+                      
+                      if (value > 0 && maxValue > 0) {
+                        barHeight = (value / maxValue) * containerHeight;
+                      } else if (value < 0) {
+                        // Handle negative values - show them as small bars
+                        barHeight = 8;
+                      }
+                      
+                      // Ensure minimum height for non-zero values
+                      if (value !== 0 && barHeight < 8) {
+                        barHeight = 8;
+                      }
+  
+                      const colorClass = ratio.color || 'bg-blue-500';
+                      
+                      return (
+                        <div key={idx} className="flex-1 flex flex-col items-center group relative min-w-0">
+                          <div className="relative w-full flex justify-center">
+                            <div
+                              className={`w-8 ${colorClass} rounded-t-md transition-all duration-300 hover:opacity-80 cursor-pointer`}
+                              style={{
+                                height: `${barHeight}px`,
+                              }}
+                              title={`${years[idx]?.toString().replace('31-Mar-', '') || idx}: ${value || 'N/A'}${ratio.unit || ''}`}
+                            />
+                          </div>
+                          <div className="text-xs text-gray-500 mt-2 text-center font-medium">
+                            {years[idx]?.toString().replace('31-Mar-', '\'').replace('20', '') || idx}
+                          </div>
+                          <div className="text-xs text-gray-600 font-medium">
+                            {value !== undefined && value !== null ? `${value}${ratio.unit || ''}` : 'N/A'}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
 const PeerTable = ({ title, data, className = "" }) => (
   <div className={`bg-white rounded-lg p-6 shadow-sm ${className}`}>
@@ -492,13 +518,13 @@ const AncillaryTab = ({ company }) => {
   const peerData = company.ancillary.peerData || [];
   
   const revenueGrowthTrend = ratioData.revenueGrowth?.[0] && ratioData.revenueGrowth?.[1] ? 
-    ratioData.revenueGrowth[0] - ratioData.revenueGrowth[1] : 0;
+    Number((ratioData.revenueGrowth[0] - ratioData.revenueGrowth[1]).toFixed(2)) : 0;
   
   const roeTrend = ratioData.roe?.[0] && ratioData.roe?.[1] ? 
-    ratioData.roe[0] - ratioData.roe[1] : 0;
+    Number((ratioData.roe[0] - ratioData.roe[1]).toFixed(2)) : 0;
   
   const debtEquityTrend = ratioData.debtEquity?.[0] && ratioData.debtEquity?.[1] ? 
-    ratioData.debtEquity[1] - ratioData.debtEquity[0] : 0;
+    Number((ratioData.debtEquity[1] - ratioData.debtEquity[0]).toFixed(2)) : 0;
   
   const chartRatios = [
     { name: 'Revenue Growth (%)', data: ratioData.revenueGrowth || [], unit: '%', color: 'bg-blue-500' },
@@ -519,13 +545,13 @@ const AncillaryTab = ({ company }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <MetricCard 
             title="Latest Revenue Growth"
-            value={`${(ratioData.revenueGrowth[0] || 0).toFixed(1)}%`}
+            value={`${(ratioData.revenueGrowth[0] || 0).toFixed(2)}%`}
             change={revenueGrowthTrend}
             isPercentage={true}
           />
           <MetricCard 
             title="Return on Equity"
-            value={`${(ratioData.roe[0] || 0).toFixed(1)}%`}
+            value={`${(ratioData.roe[0] || 0).toFixed(2)}%`}
             change={roeTrend}
             isPercentage={true}
           />
